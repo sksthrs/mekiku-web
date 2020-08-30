@@ -1,0 +1,738 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  width: 100%;
+  height: 100%;
+  border: none;
+  margin: 0;
+  padding: 0;
+  background-color: black;
+  font-family: sans-serif;
+  font-size: 14pt;
+}
+
+body {
+  width: 100%;
+  height: 100%;
+  border: none;
+  margin: 0;
+  padding: 0;
+  background-color: #303030;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+textarea {
+  outline: 0;
+  resize: none;
+}
+
+label {
+  cursor: pointer;
+}
+
+/* ==================== Generic Classes ==================== */
+
+.titlebar {
+  border-width: 0 1px;
+  border-style: solid;
+  border-color: #c5c5c5;
+  margin: 0;
+  padding: 0;
+  font-size: 10pt;
+  color: black;
+  background-color: #a0a0a0;
+}
+
+/*
+  modal dialogs (dialog element not supported by Safari, disabled by Firefox)
+  https://caniuse.com/dialog
+*/
+.dialog_content {
+  margin: 0;
+  padding: 0.5em;
+  border: 4px solid #ffffff;
+  border-radius: 8px;
+  background-color: #e0e0e0;
+}
+.open {
+  visibility: visible;
+}
+.dialog {
+  visibility: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 99990;
+  width: 100%;
+  height: 100%;
+
+  margin: 0;
+  padding: 0;
+  border: none;
+
+  /*background-color: rgba(64, 64, 64, 0.9);*/
+  background-color: #404040;
+  
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.dialog td {
+  padding: 0.2em 0 0.2em 0;
+}
+.dialog input[type="text"]:valid {
+  background-color: white;
+  color: black;
+}
+.dialog input[type="text"]:invalid {
+  background-color: #FFA0A0;
+  color: black;
+}
+
+.wrap {
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+.w2 { width: 2em; }
+.w3 { width: 3em; }
+.w4 { width: 4em; }
+.w5 { width: 5em; }
+.w6 { width: 6em; }
+.w7 { width: 7em; }
+.w8 { width: 8em; }
+.w16 { width: 16em; }
+
+.inlineButton {
+  border-width: 2px;
+  border-radius: 4px;
+  border-color: #808080;
+}
+
+tr.single_column {
+  text-align: center;
+}
+
+/* ==================== Button-style radio-switch ==================== */
+
+.radio_choice {
+  display: inline-block;
+	margin: 0 0.5em 0 0.1em;
+	padding: 4px 0 4px 0;
+}
+
+.radio_toggle {
+	display: none;
+}
+
+.label_toggle {
+	padding: 2px 6px;
+	border: 1px solid black;
+	border-radius: 4px;
+}
+
+.radio_toggle+label {
+	font-weight: normal;
+	background-color: #DDD;
+}
+
+.radio_toggle:checked+label {
+	font-weight: bold;
+	background-color: #CFC;
+}
+
+/* ==================== App-specific Elements ==================== */
+
+#app_control {
+  position: absolute;
+  right: 0;
+  z-index: 9;
+  margin: 0;
+  padding: 0 2px 4px 2px;
+  border: none;
+  font-size: 22px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #c0d0c0;
+}
+.top {
+  top: 0;
+}
+.bottom {
+  bottom: 0;
+}
+.no-show {
+  display: none;
+}
+
+.buttonlike {
+  margin: 0 1px 0 1px;
+  padding: 2px;
+  border: 2px solid #808080;
+  cursor: default;
+}
+
+#short_state {
+  padding: 0;
+  margin: 0;
+  border: none;
+}
+
+#container {
+  width: 100%;
+  height: 100%;
+  border: none;
+  margin: 0;
+  padding: 0;
+
+  display: flex;
+  flex-direction: row;
+}
+
+.toolbar {
+  border: 1px solid #c5c5c5;
+  padding: 0px 2px;
+  flex-grow: 0;
+  flex-shrink: 0;
+  
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.pane {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background-color: #303030;
+  color: white;
+}
+
+.h_pane {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+#pane1 {
+  width: 45%;
+}
+#pane2 {
+  width: 25%;
+}
+#pane3 {
+  width: 30%;
+}
+
+/* main display and input (input pane shouldn't be resized) */
+#display-input {
+  flex-grow: 1;
+  flex-shrink: 1;
+  height: 65%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* main display */
+#display {
+  overflow: hidden;
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+#mainText {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+div.scroll {
+  transition-property: transform;
+  transition-duration: 200ms;
+  transition-timing-function: linear;
+}
+#mainLineHeightChecker {
+  position: relative;
+  top: -10000px;
+  left: -12000px;
+}
+#mainCache {
+  position: relative;
+  top: -12000px;
+  left: -12000px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* input */
+#input {
+  padding: 0;
+  flex-grow: 0;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+.inputArea {
+  margin: 1px;
+  padding-bottom: 0.2em; /* to show underline used by IMEs */
+}
+
+/* monitor */
+div#monitor {
+  flex-grow: 1;
+  flex-shrink: 1;
+  height: 35%;
+  overflow-y: auto; /* appear scroll bar if needed */
+}
+table#monitorTable {
+  width: 100%;
+  table-layout: fixed;
+}
+.monitorColumn1 {
+  width: 20%;
+}
+.monitorColumn2 {
+  width: 80%;
+}
+table#monitorTable td.header {
+  text-align: center;
+}
+table#monitorTable .header-text {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+table#monitorTable td {
+  border: 1px solid #c5c5c5;
+  line-height: 1.2em;
+  vertical-align: middle;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+}
+#monitorFontChecker {
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  z-index: -99999;
+}
+#monitorFooter {
+  border: 1px solid #808080;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* chat */
+div#chat {
+  width: 100%;
+  height: 50%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  flex-grow: 1;
+  flex-shrink: 1;
+
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: stretch;
+}
+/* #chat-toolbar {} */
+#chat-timer-stop {
+  margin-right: 0.5em;
+}
+#chat-timer-value {
+  border: 1px solid #c5c5c5;
+  text-align: center;
+  vertical-align: middle;
+  width: 2em;
+}
+#chat-log {
+  border: 1px solid #c5c5c5;
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+#chat-input {
+  border: 1px solid #c5c5c5;
+  flex-grow: 0;
+  flex-shrink: 0;
+  padding-bottom: 0.2em;
+}
+#chat-timer-now {
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+  vertical-align: middle;
+}
+
+/* fkey */
+#fkey {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+table#fkey-table {
+  table-layout: fixed;
+  width: 100%;
+}
+.fkey-label {
+  width: 3em;
+  padding: 0;
+  border: 0;
+  margin: 0;
+  line-height: 1.0em;
+}
+.fkey-input {
+  width: 100%;
+  border: 1px solid black;
+  padding: 1px 2px 0.2em 2px; /* bottom for IME-underline */
+}
+td.fkey-text {
+  line-height: 1.0em;
+  padding: 0;
+}
+.fkey-text-readonly {
+  border: 0;
+  padding: 1px 2px 0.2em 2px !important;
+  margin: 0;
+}
+#fkey-table td {
+  white-space: nowrap;
+}
+
+/* pft */
+div#pft {
+  width: 100%;
+  height: 50%;
+  flex-grow: 1;
+  flex-shrink: 1;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: stretch;
+}
+/* div#pft-toolbar {} */
+div#pft-panes {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  flex-grow: 1;
+  flex-shrink: 1;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+#pft1 , #pft2 , #pft3 {
+  display: flex;
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  flex-basis: 33%;
+  height: 100%;
+  box-sizing: border-box;
+  border: 1px solid #c5c5c5;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* for enable text-overflow in #pftN-name (flexbox requires it) */
+}
+#pft1-name , #pft2-name , #pft3-name {
+  flex-grow: 0;
+  flex-shrink: 0;
+  width: 100%;
+  height: 1em;
+  line-height: 1em;
+  text-align: start;
+  vertical-align: text-top;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: clip;
+  margin: 0;
+  padding: 0;
+}
+#pft1-name-text , #pft2-name-text , #pft3-name-text {
+  margin: 0;
+  border: 0;
+  vertical-align: top;
+}
+#pft1-text , #pft2-text , #pft3-text {
+  flex-grow: 1;
+  flex-shrink: 1;
+  width: 100%;
+  height: 100%;
+  border-top: 2px solid #c5c5c5;
+  margin: 0;
+  padding: 0;
+}
+
+/* pft-monitor */
+#pftMon {
+  width: 100%;
+  height: 50%;
+  flex-grow: 1;
+  flex-shrink: 1;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: stretch;
+}
+#pftMon-log {
+  flex-grow: 1;
+  flex-shrink: 1;
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  border: 1px solid #c5c5c5;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  white-space: pre;
+}
+#pftMon-above {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  color: transparent;
+  background-color: transparent;
+  pointer-events: none;
+  z-index: 2;
+  border-bottom: 2px solid #c5c5c5;
+}
+#pftMon-log-text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+#pftMon-state {
+  flex-grow: 0;
+  flex-shrink: 0;
+  width: 100%;
+  height: 1em;
+  line-height: 1em;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+#pftMon-state-text {
+  margin: 0;
+  border: 0;
+  vertical-align: top;
+  pointer-events: none;
+}
+
+/* input dialog */
+#inputdialog {
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 99991; /* higher than ordinally dialogs */
+}
+#inputdialog input {
+  font-family: inherit;
+  font-size: 100%;
+}
+#inputdialog-buttons {
+  text-align: center;
+}
+
+/* login dialog */
+#login input {
+  font-family: inherit;
+}
+#login input[type="text"] {
+  width: 100%;
+  min-width: 10em;
+}
+#login input[type="password"] {
+  width: 100%;
+  min-width: 10em;
+}
+#login-key-room , #login-key-name, #login-key-pass {
+  padding-right: 0.5em;
+}
+#loginDialog_log_download_pane {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: transparent;
+  padding: 4px;
+}
+
+/* config */
+#config-container , #config-view-container {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: black;
+  overflow: scroll;
+  font-size: 14px;
+}
+#config , #config-view {
+  min-width: 50%;
+}
+#config-container button,
+#config-container input,
+#config-container select,
+#config-container textarea,
+#config-view-container button,
+#config-view-container input,
+#config-view-container select,
+#config-view-container textarea
+{
+  font-family : inherit;
+  font-size   : 100%;
+}
+#config h2 , #config-view h2 {
+  font-size: large;
+  font-weight: bold;
+  border-bottom: 1px solid black;
+  /*margin-top: 2em;*/
+}
+#config label , #config-view label {
+  vertical-align: middle;
+}
+.config-singleline {
+  margin-bottom: 0.5em;
+}
+.config-key:after {
+  content: " : ";
+}
+/* config tab */
+.tab_menu .tab_item {
+  box-sizing: border-box;
+  display: block;
+  float: left;
+  text-align: center;
+  width: 33%;
+  height: 1.8em;
+  background-color: #f0f0f0;
+  color: black;
+  margin: 0;
+  border: 1px solid #c0c0c0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+input[name="config-section"] {
+  display: none;
+}
+#config .tab_content , #config-view .tab_content {
+  display: none;
+  clear: both;
+/*  overflow: hidden; */
+}
+#config div.group , #config-view div.group {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+#menu-general:checked ~ #config-about-general,
+#menu-main:checked ~ #config-about-main,
+#menu-input:checked ~ #config-about-input,
+#menu-chat:checked ~ #config-about-chat,
+#menu-monitor:checked ~ #config-about-monitor,
+#menu-pft:checked ~ #config-about-pft,
+#menu-pftmon:checked ~ #config-about-pftmon,
+#menu-fkey:checked ~ #config-about-fkey,
+#menu-view-general:checked ~ #config-view-about-general,
+#menu-view-main:checked ~ #config-view-about-main
+{
+  display: block;
+  clear: both;
+  padding: 4px 0 0 0;
+  margin: 0;
+  border: 0;
+}
+.tab_menu input:checked + .tab_item {
+  background-color: #404040;
+  color: white;
+}
+
+/* ==================== Split.js ==================== */
+
+.gutter {
+  background-color: #eee;
+
+  background-repeat: no-repeat;
+  background-position: 50%;
+}
+
+.gutter.gutter-horizontal {
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
+  cursor: col-resize;
+}
+
+.gutter.gutter-vertical {
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=');
+  cursor: row-resize;
+}
+
+/* ==================== LigatureSymbols ==================== */
+
+@font-face {
+  font-family: 'LigatureSymbols';
+  src: url('LigatureSymbols.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.lsf {
+  font-family: 'LigatureSymbols';
+  -webkit-text-rendering: optimizeLegibility;
+  -moz-text-rendering: optimizeLegibility;
+  -ms-text-rendering: optimizeLegibility;
+  -o-text-rendering: optimizeLegibility;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: antialiased;
+  -webkit-font-feature-settings: "liga" 1, "dlig" 1;
+  -moz-font-feature-settings: "liga=1, dlig=1";
+  -ms-font-feature-settings: "liga" 1, "dlig" 1;
+  -o-font-feature-settings: "liga" 1, "dlig" 1;
+  font-feature-settings: "liga" 1, "dlig" 1;
+}
+
+.lsf-icon:before {
+  content:attr(title);
+  margin-right:0.3em;
+  font-size:130%;
+  font-family: 'LigatureSymbols';
+  -webkit-text-rendering: optimizeLegibility;
+  -moz-text-rendering: optimizeLegibility;
+  -ms-text-rendering: optimizeLegibility;
+  -o-text-rendering: optimizeLegibility;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: antialiased;
+  -webkit-font-feature-settings: "liga" 1, "dlig" 1;
+  -moz-font-feature-settings: "liga=1, dlig=1";
+  -ms-font-feature-settings: "liga" 1, "dlig" 1;
+  -o-font-feature-settings: "liga" 1, "dlig" 1;
+  font-feature-settings: "liga" 1, "dlig" 1;
+}
