@@ -5,8 +5,11 @@ import {Content, ContentClass, ContentToSend, MemberType, ContentToSendClass} fr
 import LoginInfo from "./loginInfo"
 
 export class MekikuCommEvents {
-  onIdAcquired: (id:string) => void = (id) => {}
-  /** alled when someone sends a message */
+  /** called when Peer-ID confirmed */
+  onPeerIdAcquired: (id:string) => void = (id) => {}
+  /** called when error occured on Peer level */
+  onPeerError: (err:any) => void = (err) => {}
+  /** called when someone sends a message */
   onReceived: (data:Content) => void = (d) => {}
   /** called when you joined a room */
   onJoinedRoom: () => void = () => {}
@@ -19,13 +22,29 @@ export class MekikuCommEvents {
   logger: (msg:string) => void = (msg) => {}
 }
 
+export interface MekikuCommOpenOption {
+  debugLevel?: number
+  id?: string
+  handleOpen?: (id:string) => void
+}
+
+class MekikuCommOpenOptionClass implements MekikuCommOpenOption {
+  debugLevel: number = 2
+  id?: string
+  handleOpen: (id:string) => void = id => {}
+}
+
 /**
  * Communication class for mekiku-web
  */
 class MekikuComm {
-  private peer: Peer
+  private peer: Peer | undefined
   private room: SFURoom | MeshRoom | null | undefined
   private info: LoginInfo | undefined
+  private openOption?: MekikuCommOpenOption
+  isOpen() : boolean {
+    return this.peer?.open === true
+  }
   getInfo() : LoginInfo | undefined {
     return this.info == null ? undefined : LoginInfo.clone(this.info)
   }
@@ -33,8 +52,11 @@ class MekikuComm {
     return this.info != null
   }
 
-  onIdAcquired: (id:string) => void = (id) => {}
-  /** alled when someone sends a message */
+  /** called when Peer-ID confirmed */
+  onPeerIdAcquired: (id:string) => void = (id) => {}
+  /** called when error occured on Peer level */
+  onPeerError: (err:any) => void = (err) => {}
+  /** called when someone sends a message */
   onReceived: (data:Content) => void = (d) => {}
   /** called when you joined a room */
   onJoinedRoom: () => void = () => {}
@@ -47,19 +69,40 @@ class MekikuComm {
   logger: (msg:string) => void = (msg) => {}
 
   constructor(eventHandlers?:MekikuCommEvents) {
-    // "debug" option values : NONE=0, ERROR=1, WARN=2, FULL=3
-    this.peer = new Peer({
-      key: '03ab2f52-64bb-4ffa-a395-9a335b8ce95d',
-      debug: 1
-    })
     if (eventHandlers != null) {
-      this.onIdAcquired = eventHandlers.onIdAcquired
+      this.onPeerIdAcquired = eventHandlers.onPeerIdAcquired
+      this.onPeerError = eventHandlers.onPeerError
       this.onJoinedRoom = eventHandlers.onJoinedRoom
       this.onLeftRoom = eventHandlers.onLeftRoom
       this.onReceived = eventHandlers.onReceived
       this.onSomeoneJoined = eventHandlers.onSomeoneJoined
       this.onSomeoneLeft = eventHandlers.onSomeoneLeft
       this.logger = eventHandlers.logger
+    }
+  }
+
+  /**
+   * Open connection with signaling server (if not opened).
+   * @param key Skyway API key
+   * @param debugLevel debug level (NONE=0, ERROR=1, WARN=2, FULL=3)
+   * @param id [option] Explicit peer-id
+   */
+  open(key: string, option?:MekikuCommOpenOption) {
+    if (this.peer?.open === true) {
+      Log.w('Info',`comm.open : old peer(id=${this.peer.id}) remains. disconnecting...`)
+      this.peer.disconnect()
+    }
+    this.openOption = { ...new MekikuCommOpenOptionClass(), ...option }
+    const opt = {
+      key: key,
+      debug: this.openOption.debugLevel,
+    }
+    if (this.openOption.id != null) {
+      Log.w('Debug',`comm.open : construct new peer(id=${this.openOption.id})`)
+      this.peer = new Peer(this.openOption.id, opt)
+    } else {
+      Log.w('Debug',`comm.open : construct new peer(id: set by skyway)`)
+      this.peer = new Peer(opt)
     }
     this.setPeerEvents(this.peer)
   }
@@ -109,8 +152,12 @@ class MekikuComm {
     const type = this.info?.memberType ?? MemberType.WEB_SUBTITLER
     const sendBase = new ContentToSendClass(name,type)
     const d = {...data , ...sendBase}
-    // Log.w('Info',`queue data:${JSON.stringify(d)}`)
-    this.room?.send(d) // yet not queueing
+    if (this.room != null) {
+      // Log.w('Info',`queue data:${JSON.stringify(d)}`)
+      this.room.send(d) // yet not queueing
+    } else {
+      // Log.w('Info',`(no room, not sent) queue data:${JSON.stringify(d)}`)
+    }
     return d
   }
 
@@ -123,15 +170,23 @@ class MekikuComm {
     const type = this.info?.memberType ?? MemberType.WEB_SUBTITLER
     const sendBase = new ContentToSendClass(name,type)
     const d = {...data , ...sendBase}
-    Log.w('Info',`send data:${JSON.stringify(d)}`)
-    this.room?.send(d)
+    if (this.room != null) {
+      Log.w('Info',`send data:${JSON.stringify(d)}`)
+      this.room?.send(d)
+    } else [
+      Log.w('Info',`(no room, not sent) data:${JSON.stringify(d)}`)
+    ]
     return d
   }
 
   private setPeerEvents(p:Peer) {
     p.on('open', id => {
       Log.w('Info',`peer opened id=${id}`)
-      this.onIdAcquired(id)
+      if (this.openOption?.handleOpen != null) {
+        this.openOption.handleOpen(id)
+        delete this.openOption
+      }
+      this.onPeerIdAcquired(id)
     })
     p.on('close', () => {
       Log.w('Info',`peer closed`)
@@ -144,6 +199,7 @@ class MekikuComm {
     })
     p.on('error', err => {
       Log.w('Error',`peer error (${err.type}) <${err.message}>`)
+      this.onPeerError(err)
     })
   }
 
@@ -172,6 +228,7 @@ class MekikuComm {
       Log.w('Info',`room closed`)
       delete this.room
       delete this.info
+      this.peer?.disconnect()
       this.onLeftRoom()
     })
   }

@@ -208,6 +208,8 @@ export class T {
         "Viewer" : "閲覧者",
         "Number of Viewers" : "閲覧者数",
         "Error occured on file access.\nIf another application is using it, first quit it." : "ファイルへのアクセスでエラーが発生しました。\n他のプログラムでファイルを開いていたら、そちらを終了してください。",
+        "Communication error." : "通信エラーです。",
+        "Detail" : "詳細",
       },
       "Input" : {
         "Input Window" : "入力ウインドウ",
@@ -270,6 +272,7 @@ export class T {
         "Room" : "ルーム",
         "Viewer" : "利用者・閲覧者",
         "Subtitler" : "入力者（要約筆記者）",
+        "Login failed." : "ログインに失敗しました。",
       },
       "Config" : {
         "Config" : "設定",
@@ -364,6 +367,8 @@ export class T {
         // "Viewer" : "",
         // "Number of Viewers" : "",
         "Error occured on file access.\nIf another application is using it, first quit it." : "เกิดข้อผิดพลาดในการอ่านไฟล์\nถ้าแอพพลิเคชั่นอื่นกำลังใช้ไฟล์นี้\nให้ปิดไฟล์นี้ก่อน",
+        // "Communication error." : "",
+        // "Detail" : "",
       },
       "Input" : {
         "Input Window" : "หน้าต่างอินพุท",
@@ -426,6 +431,7 @@ export class T {
         // "Room" : "",
         // "Viewer" : "",
         // "Subtitler" : "",
+        // "Login failed." : "",
       },
       "Config" : {
         "Config" : "การตั้งค่า ",
