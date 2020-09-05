@@ -95,7 +95,9 @@ class App {
     this.setLoginDialogEvents()
     this.dialogLogin.hidePass() // no password
     this.dialogLogin.setName(TmpConfig.getName())
-    if (location.hash.length > 1) {
+    const roomNameRaw = Util.beforeOf(UtilDom.getQuery() , '/')
+    if (Util.isRoomNameLegit(roomNameRaw)) {
+      this.dialogLogin.setRoom(roomNameRaw)
       this.dialogLogin.hideRoom()
     }
     this.updatePageTitle(T.t("Login","Login"))
@@ -150,7 +152,7 @@ class App {
 
   private updateRoomName(room:string) {
     this.roomName = room
-    location.hash = room
+    UtilDom.setQuery(room)
     if (room.length > 0) {
       this.updatePageTitle(T.t("Room","General") + " " + room)
     } else {

@@ -1,6 +1,26 @@
 import { Util } from "./util"
 
 export class UtilDom {
+  /**
+   * Get query string without leading '?'
+   * @returns query string if exists, or '' if query string does not exist
+   */
+  static getQuery() : string {
+    const q = location.search
+    if (q.length > 0 && q[0] === '?') {
+      return q.substring(1)
+    }
+    return ''
+  }
+
+  /**
+   * Set query string in the address bar.
+   * @param query query string without leading '?'
+   */
+  static setQuery(query:string) {
+    history.replaceState({}, '', '?'+query)
+  }
+
   static getWidth(el: HTMLElement): number {
     if (!el) return -1;
     const b = el.getBoundingClientRect();
