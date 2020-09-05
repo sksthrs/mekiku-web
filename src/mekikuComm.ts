@@ -99,10 +99,10 @@ class MekikuComm {
       debug: this.openOption.debugLevel,
     }
     if (this.openOption.id != null) {
-      Log.w('Debug',`comm.open : construct new peer(id=${this.openOption.id})`)
+      Log.w('Info',`comm.open : construct new peer(id=${this.openOption.id})`)
       this.peer = new Peer(this.openOption.id, opt)
     } else {
-      Log.w('Debug',`comm.open : construct new peer(id: set by skyway)`)
+      Log.w('Info',`comm.open : construct new peer(id: set by skyway)`)
       this.peer = new Peer(opt)
     }
     this.setPeerEvents(this.peer)
