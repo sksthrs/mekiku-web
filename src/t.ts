@@ -228,6 +228,10 @@ export class T {
         "It's new turn now." : "交代です。",
         "Timer started. Next " : "タイマーを開始しました。通知間隔 ",
         "Timer halted." : "タイマーを停止しました。",
+        "login" : "新規ログイン", // real message : "(login : NAME_OF_MEMBER)"
+        "New viewer joined." : "閲覧者がログイン",
+        "logout" : "ログアウト", // real message : "(logout : NAME_OF_MEMBER)"
+        "A viewer left." : "閲覧者が退室",
       },
       "Monitor" : {
         "Input Monitor" : "入力モニター",
@@ -388,6 +392,10 @@ export class T {
         "It's new turn now." : "เริ่มใหม่",
         "Timer started. Next " : "ไทเมอร์เริ่ม ถัดไป ",
         "Timer halted." : "ไทเมอร์หยุด ",
+        // "login" : "", // real message : "(login : NAME_OF_MEMBER)"
+        // "New viewer joined." : "",
+        // "logout" : "", // real message : "(logout : NAME_OF_MEMBER)"
+        // "A viewer left." : "",
       },
       "Monitor" : {
         "Input Monitor" : "มอนิเตอร์อินพุท",

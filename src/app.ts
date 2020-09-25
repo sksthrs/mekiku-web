@@ -118,6 +118,7 @@ class App {
     this.setInputEvents()
 
     this.paneMonitor = new PaneMonitor()
+    this.setMonitorEvents()
 
     this.paneChat = new PaneChat()
     this.setChatEvents()
@@ -302,6 +303,24 @@ class App {
       const d = ContentUtil.makeUndoData(undoed.id, undoed.sentMsec)
       this.comm.send_room(d)
       return undoed.content
+    })
+  }
+
+  private setMonitorEvents() {
+    this.paneMonitor.setOnNewJoined(member => {
+      if (member.memberType === MemberType.WEB_SUBTITLER) {
+        this.paneChat.addSystemMessage(`(${T.t('login','Chat')} : ${member.name})`)
+      } else {
+        this.paneChat.addSystemMessage(`(${T.t('New viewer joined.','Chat')})`)
+      }
+    })
+
+    this.paneMonitor.setOnLeft(member => {
+      if (member.memberType === MemberType.WEB_SUBTITLER) {
+        this.paneChat.addSystemMessage(`(${T.t('logout','Chat')} : ${member.name})`)
+      } else {
+        this.paneChat.addSystemMessage(`(${T.t('A viewer left.','Chat')})`)
+      }
     })
   }
 
@@ -618,7 +637,7 @@ class App {
     if (ContentType.LOGOFF in data) {
       this.paneMonitor.deleteMember(data.senderID)
     } else {
-      this.paneMonitor.updateMember(member)
+      this.paneMonitor.updateMember(member, data)
     }
     this.paneMain.notifyNewItemsFinish()
   }
