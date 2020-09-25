@@ -101,7 +101,15 @@ class App {
       this.dialogLogin.hideRoom()
     }
     this.updatePageTitle(T.t("Login","Login"))
-    this.dialogLogin.showDialog()
+    // Cannot support old browsers (MSIE=IE(<11), Trident=IE11, Edge=EdgeHTML). Chromium Edge('Edg') is okay.
+    if (Util.contains(navigator.userAgent, 'MSIE', 'Trident', 'Edge')) {
+      // do nothing for no-support browser, so shutter remains topmost.
+    } else {
+      // seems running on not no-support browser. hide shutter and show login dialog.
+      const shutter = document.getElementById('shutter') as HTMLDivElement;
+      shutter.style.display = 'none'
+      this.dialogLogin.showDialog()
+    }
 
     this.paneMain = new PaneMain()
 
@@ -260,6 +268,7 @@ class App {
         info.room = location.hash
       }
       TmpConfig.setName(info.name)
+      TmpConfig.setMemberType(info.memberType)
       let login_info = info
       this.comm.open('03ab2f52-64bb-4ffa-a395-9a335b8ce95d',{
         handleOpen: id => {
@@ -553,8 +562,9 @@ class App {
     this.dialogLogin.setRoom(this.roomName)
     this.dialogLogin.setName(TmpConfig.getName())
     this.updateRoomName('')
-    const hasMain = this.paneMain.hasMainLog()
-    const hasChat = this.paneChat.hasLog()
+    const isSubtitler = TmpConfig.getMemberType() === MemberType.WEB_SUBTITLER
+    const hasMain = this.paneMain.hasMainLog() && isSubtitler
+    const hasChat = this.paneChat.hasLog() && isSubtitler
     this.dialogLogin.showDialog(hasMain, hasChat)
   }
 
@@ -586,27 +596,30 @@ class App {
     if (ContentUtil.hasGrossData(data)) {
       this.paneMain.addNewGross(data)
     }
-    if (ContentUtil.hasChatData(data)) {
-      this.paneChat.addMessage(data.senderName, data.C)
-      const member = MemberInfoClass.fromContent(data)
-      this.paneMonitor.updateMember(member)
-    }
-    if (ContentUtil.hasMonitorData(data)) {
-      member.inputContent = data.M
-    }
-    if (ContentUtil.hasPftMonData(data)) {
-      this.panePftMon.update(data.A, data.B, data)
-    }
+
     if (ContentUtil.hasUndoData(data)) {
       this.paneMain.addNewUndo(data)
-    }
-    if (ContentType.LOGOFF in data) {
-      this.paneMonitor.deleteMember(data.senderID)
     }
     if (ContentType.HB in data) {
     }
 
-    this.paneMonitor.updateMember(member)
+    if (TmpConfig.getMemberType() === MemberType.WEB_SUBTITLER) {
+      if (ContentUtil.hasChatData(data)) {
+        this.paneChat.addMessage(data.senderName, data.C)
+      }
+      if (ContentUtil.hasMonitorData(data)) {
+        member.inputContent = data.M
+      }
+      if (ContentUtil.hasPftMonData(data)) {
+        this.panePftMon.update(data.A, data.B, data)
+      }
+    }
+
+    if (ContentType.LOGOFF in data) {
+      this.paneMonitor.deleteMember(data.senderID)
+    } else {
+      this.paneMonitor.updateMember(member)
+    }
     this.paneMain.notifyNewItemsFinish()
   }
 

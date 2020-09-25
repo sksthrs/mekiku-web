@@ -13,6 +13,15 @@ class TmpConfig {
       localStorage.setItem('tmp-config-name', name)
     }
   }
+
+  // user member-type
+  private static memberType:string = '';
+  static getMemberType() : string {
+    return this.memberType
+  }
+  static setMemberType(memberType:string) {
+    this.memberType = memberType
+  }
 }
 
 export default TmpConfig
