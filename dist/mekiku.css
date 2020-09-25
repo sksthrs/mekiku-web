@@ -654,6 +654,9 @@ div#pft-panes {
   background-color: transparent;
   padding: 4px;
 }
+#login-button {
+  font-size: inherit;
+}
 
 /* config */
 #config-container , #config-view-container {
