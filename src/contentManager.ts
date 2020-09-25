@@ -266,11 +266,11 @@ export class ContentManager {
     const estimate = this.scanLog(newDataForEstimate);
 
     if (estimate.result === EstimateResult.ADD) {
-      Log.w('Info',`result:add`)
+      // Log.w('Info',`result:add`)
       this.log.push(newDataForEstimate);
       return baseFlag;
     } else if (estimate.result === EstimateResult.INSERT) {
-      Log.w('Info',`result:insert at ${estimate.iInsert}`)
+      // Log.w('Info',`result:insert at ${estimate.iInsert}`)
       this.log.splice(estimate.iInsert, 0, newDataForEstimate);
       return baseFlag | MainUpdateFlags.INBETWEEN;
     } else if (estimate.result === EstimateResult.UPDATE) {
@@ -278,15 +278,15 @@ export class ContentManager {
         && this.isUndone(newDataForEstimate)
         && ((baseFlag & (MainUpdateFlags.ERASE | MainUpdateFlags.GROSS)) == 0)) 
       {
-        Log.w('Info',`result:undo at ${estimate.iInsert}`)
+        // Log.w('Info',`result:undo at ${estimate.iInsert}`)
         this.log[estimate.iInsert].flag = MekikuUnitDataFlags.UNDONE;
         return MainUpdateFlags.CHANGE | MainUpdateFlags.INBETWEEN | MainUpdateFlags.UNDO;
       } else {
-        Log.w('Info',`result:update...nothing at ${estimate.iInsert}`)
+        // Log.w('Info',`result:update...nothing at ${estimate.iInsert}`)
         return MainUpdateFlags.NOP;
       }
     } else {
-      Log.w('Info',`result:${estimate.result}`)
+      // Log.w('Info',`result:${estimate.result}`)
       return MainUpdateFlags.NOP;
     }
   }
