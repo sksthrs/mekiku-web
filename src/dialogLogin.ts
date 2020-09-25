@@ -17,6 +17,14 @@ class DialogLogin {
   private buttonDownloadMain = document.getElementById('loginDialog_main_log_download') as HTMLButtonElement
   private buttonDownloadChat = document.getElementById('loginDialog_chat_log_download') as HTMLButtonElement
 
+  /** Condition for login (set from outside) */
+  private loginCondition: number = 0
+  /** Set value for login (set from outside) */
+  setLoginCondition(cond:number) {
+    this.loginCondition = cond
+    this.updateState()
+  }
+
   onLoginClick: (info:LoginInfo) => void = i => {}
   onDownloadMain: () => void = () => {}
   onDownloadChat: () => void = () => {}
@@ -88,6 +96,10 @@ class DialogLogin {
       if (this.passInput.value.length < 1) {
         canLogin = false
       }
+    }
+
+    if (this.loginCondition < 1) {
+      canLogin = false
     }
 
     this.buttonLogin.disabled = ! canLogin
