@@ -331,6 +331,16 @@ export class PaneMain implements Pane {
 
     this.applyFont(this.mainCache);
 
+    // 'transition-duration' is used only once.
+    const scrollMsecRules = UtilDom.extractCSSRulesByText('transition-duration')
+    for (const rule of scrollMsecRules) {
+      // CSSRule is CSSStyleRule when CSSRule.type is STYLE_RULE
+      if (rule.type === CSSRule.STYLE_RULE) {
+        const styleRule = rule as CSSStyleRule
+        styleRule.style.transitionDuration = this.getScrollMsec() + "ms"
+      }
+    }
+
     this.updateScreen()
   }
 
@@ -393,6 +403,10 @@ export class PaneMain implements Pane {
 
   private getLineHeight() : number {
     return this.isViewerMode ? AppConfig.data.main_v_lineHeight : AppConfig.data.main_lineHeight
+  }
+
+  private getScrollMsec() : number {
+    return this.isViewerMode ? AppConfig.data.main_v_scrollMsec : AppConfig.data.main_scrollMsec
   }
 
   // ==================== End of AppConfig Interface ====================

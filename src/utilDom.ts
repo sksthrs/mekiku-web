@@ -211,6 +211,28 @@ export class UtilDom {
   }
 
   /**
+   * Extract all rules contains certain keyword in CSS text.
+   * @param keyword keyword to find in CSS text
+   */
+  static extractCSSRulesByText(keyword:string) : Array<CSSRule> {
+    return this.extractCSSRules(rule => rule.cssText.indexOf(keyword) >= 0)
+  }
+
+  /**
+   * Extract all rules matches certain condition.
+   * @param pred predicate to filter rules.
+   */
+  static extractCSSRules(pred:(rule:CSSRule) => boolean) : Array<CSSRule> {
+    var result:Array<CSSRule> = [];
+    for (const sheet of document.styleSheets) {
+      for (const rule of sheet.cssRules) {
+        if (pred(rule)) { result.push(rule) }
+      }
+    }
+    return result;
+  }
+
+  /**
    * Get pressed modifier keys as number.
    * Returns sum(pressed-modifier-key-value), value are among "MK_" constants.
    * "MK_" constants are all different 2^n, so you can use bit operation.
