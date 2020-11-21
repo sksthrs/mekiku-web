@@ -57,6 +57,7 @@ class App {
   private splitDisplayMonitor?: Split.Instance
   private splitPft?: Split.Instance
   private isErrorHandling: boolean = false
+  private readonly IS_BROWSER_AUTH = 'browser'
 
   constructor() {
     const localConfig = localStorage.getItem('config')
@@ -300,12 +301,13 @@ class App {
         {
           handleOpen: id => {
             this.comm.joinRoom(login_info)
+            .then(() => {})
+            .catch(error => {})
           },
           debugLevel: TmpConfig.getDebugLevel()
         }
       )
       this.updateRoomName(info.room)
-      // 'pass' is not used because no password
       this.paneMonitor.clearMembers()
       if (info.memberType === MemberType.WEB_VIEWER) {
         this.setViewerStyle()
