@@ -20,7 +20,7 @@ export class Util {
    * @param name room name candidate
    */
   static isRoomNameLegit(name:string) : boolean {
-    const re = /^[A-Za-z0-9_-]+$/
+    const re = /^[A-Za-z0-9]+$/
     return re.test(name)
   }
 
