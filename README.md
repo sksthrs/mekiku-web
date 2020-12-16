@@ -5,9 +5,9 @@ Webブラウザ上で要約筆記（Subtitling on the web）
 
 https://sksthrs.github.io/mekiku-web/dist/
 
-## 既知の問題点 (known bugs)
+## 重要（notice）
 
-- iPhoneのブラウザ上では、動作に異常があります。将来的には修正する予定です。 (On iPhone, not works properly. This will be fixed.)
+- iPhoneのブラウザ上でも正常に動作しています。iOSのバージョンを14.2以降での動作を確認しています。 (mekiku-web is also available on iPhones (iOS version are 14.2 or later).)
 
 ## 設定について (Configuration)
 
