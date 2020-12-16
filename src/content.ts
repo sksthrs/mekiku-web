@@ -114,7 +114,7 @@ export class ContentUtil {
   }
   static hasGrossData(d:any) : d is ContentDataGross {
     if (!d) return false
-    if (d.G && typeof d.G === 'string') return true
+    if (d.G != null && typeof d.G === 'string') return true
     return false
   }
 
@@ -125,7 +125,7 @@ export class ContentUtil {
   }
   static hasChatData(d:any) : d is ContentDataChat {
     if (!d) return false
-    if (d.C && typeof d.C === 'string') return true
+    if (d.C != null && typeof d.C === 'string') return true
     return false
   }
 
