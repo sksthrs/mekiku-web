@@ -54,6 +54,24 @@ export class Util {
   }
 
   /**
+   * Translate value as number
+   * @param val value translated as number
+   * @param def default value (used when val is illegal)
+   */
+  static toNumber(val:any, def:number = 0) : number {
+    if (this.isNumber(val)) {
+      return val
+    }
+    if (this.isString(val)) {
+      const n = parseInt(val,10)
+      if (Number.isNaN(n) === false) {
+        return n
+      }
+    }
+    return def
+  }
+
+  /**
    * get UTC time in "hh:mm:ss.sss" format.
    */
   static getNowUTCTimeString() : string {
