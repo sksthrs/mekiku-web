@@ -38,7 +38,11 @@ export class PaneMain implements Pane {
     this.scrollManager.setOnScroll(() => {
       this.contents.proceedLine();
       this.restructureMainText();
-      this.scrollManager.startScrollIfNeeded();
+      if (document.hidden === false) {
+        this.scrollManager.startScrollIfNeeded();
+      } else {
+        this.stopScrollAndJumpToLatest();
+      }
     });
 
     // exec finally in constructor. (in configToScreen, scroll.lineHeightPx is set.)
@@ -86,7 +90,11 @@ export class PaneMain implements Pane {
     });
     this.restructureMainText();
     this.contents.notifyPacketEnd();
-    this.scrollManager.startScrollIfNeeded();
+    if (document.hidden === false) {
+      this.scrollManager.startScrollIfNeeded();
+    } else {
+      this.stopScrollAndJumpToLatest();
+    }
   }
 
   /**
@@ -118,7 +126,11 @@ export class PaneMain implements Pane {
     })
     this.restructureMainText()
     this.contents.notifyPacketEnd()
-    this.scrollManager.startScrollIfNeeded()
+    if (document.hidden === false) {
+      this.scrollManager.startScrollIfNeeded();
+    } else {
+      this.stopScrollAndJumpToLatest();
+    }
     return undoed
   }
 
@@ -147,7 +159,11 @@ export class PaneMain implements Pane {
     });
     this.restructureMainText();
     this.contents.notifyPacketEnd();
-    this.scrollManager.startScrollIfNeeded();
+    if (document.hidden === false) {
+      this.scrollManager.startScrollIfNeeded();
+    } else {
+      this.stopScrollAndJumpToLatest();
+    }
   }
 
   /**
@@ -206,7 +222,11 @@ export class PaneMain implements Pane {
     } else {
       this.restructureMainText();
       this.contents.notifyPacketEnd();
-      this.scrollManager.startScrollIfNeeded();
+      if (document.hidden === false) {
+        this.scrollManager.startScrollIfNeeded();
+      } else {
+        this.stopScrollAndJumpToLatest();
+      }
     }
   }
 
@@ -232,7 +252,7 @@ export class PaneMain implements Pane {
     this.mainText.textContent = this.makeText(joined.v1);
   }
 
-  private stopScrollAndJumpToLatest() {
+  stopScrollAndJumpToLatest() {
     this.scrollManager.cancelScroll(() => {
       this.jumpToLatest();
       this.contents.notifyPacketEnd();
