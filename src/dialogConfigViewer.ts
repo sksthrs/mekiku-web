@@ -11,6 +11,7 @@ export class DialogConfigViewer {
   private readonly buttonFontSmaller = document.getElementById('config-view-font-size-down') as HTMLButtonElement
   private readonly buttonFontLarger = document.getElementById('config-view-font-size-up') as HTMLButtonElement
   private readonly selectLocale = document.getElementById("config-view-select-locale") as HTMLSelectElement;
+  private readonly buttonReset = document.getElementById('config-view-reset') as HTMLButtonElement
   private readonly buttonOK = document.getElementById('config-view-button-ok') as HTMLButtonElement
   private readonly buttonCancel = document.getElementById('config-view-button-cancel') as HTMLButtonElement
   private locales: Array<Tuple2<string, string>> = [];
@@ -44,6 +45,9 @@ export class DialogConfigViewer {
     })
     this.buttonCancel.addEventListener('click', ev => {
       this.hideDialog()
+    })
+    this.buttonReset.addEventListener('click', ev => {
+      this.onResetClicked()
     })
   } // end of constructor
 
