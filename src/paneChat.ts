@@ -19,6 +19,8 @@ export class PaneChat implements Pane {
   private buttonUp = document.getElementById("chat-timer-up") as HTMLButtonElement;
   private buttonDown = document.getElementById("chat-timer-down") as HTMLButtonElement;
   private textTimerValue = document.getElementById("chat-timer-value") as HTMLInputElement;
+  private audioNextTuen = document.getElementById("audio-nextturn") as HTMLAudioElement
+  private audioPrecaution = document.getElementById("audio-precaution") as HTMLAudioElement;
 
   private countDownTimerId: number = -1;
   private countDown: number = 0;
@@ -64,10 +66,12 @@ export class PaneChat implements Pane {
     let message = ""
     if (messageType === ChatSystemType.NOW) {
       message = this.makeTimerNextTurnMessage()
+      this.audioNextTuen.play()
     } else if (messageType === ChatSystemType.START) {
       message = this.makeTimerStartMessage()
     } else if (messageType === ChatSystemType.PRECAUTION) {
       message = this.makeTimerPrecautionMessage()
+      this.audioPrecaution.play()
     } else {
       return // ignore illegal type
     }
