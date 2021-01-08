@@ -363,6 +363,10 @@ class App {
       this.comm.send_room(ContentUtil.makeChatData(text))
       this.paneChat.addMessage(TmpConfig.getName(), text)
     })
+    this.paneChat.setOnSendSystem((type) => {
+      this.comm.send_room(ContentUtil.makeChatSystemData(type))
+      this.paneChat.addChatSystemMessage(TmpConfig.getName(), type)
+    })
   }
 
   private setPftEvents() {
@@ -657,6 +661,9 @@ class App {
     if (TmpConfig.getMemberType() === MemberType.WEB_SUBTITLER) {
       if (ContentUtil.hasChatData(data)) {
         this.paneChat.addMessage(data.senderName, data.C)
+      }
+      if (ContentUtil.hasChatSystemData(data)) {
+        this.paneChat.addChatSystemMessage(data.senderName, data.C_TYPE)
       }
       if (ContentUtil.hasMonitorData(data)) {
         member.inputContent = data.M

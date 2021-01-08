@@ -128,6 +128,17 @@ export class ContentUtil {
     if (d.C != null && typeof d.C === 'string') return true
     return false
   }
+  
+  static makeChatSystemData(type:number) : ContentDataChatSystem {
+    return {
+      "C_TYPE" : type
+    }
+  }
+  static hasChatSystemData(d:any) : d is ContentDataChatSystem {
+    if (!d) return false
+    if (d.C_TYPE != null && typeof d.C_TYPE === 'number') return true
+    return false
+  }
 
   static makeMonitorData(text:string) : ContentDataMonitor {
     return {
@@ -192,6 +203,12 @@ export const ContentType = {
   HB : "H",
 } as const
 
+export const ChatSystemType = {
+  NOW : 0,
+  START : 1,
+  PRECAUTION: 30,
+} as const
+
 export interface ContentDataDisplay {
   D : string
 }
@@ -200,6 +217,9 @@ export interface ContentDataGross {
 }
 export interface ContentDataChat {
   C : string
+}
+export interface ContentDataChatSystem {
+  C_TYPE : number
 }
 export interface ContentDataMonitor {
   M : string
