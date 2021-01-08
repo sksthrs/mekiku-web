@@ -66,12 +66,12 @@ export class PaneChat implements Pane {
     let message = ""
     if (messageType === ChatSystemType.NOW) {
       message = this.makeTimerNextTurnMessage()
-      this.audioNextTuen.play()
+      if (AppConfig.data.chat_useSound) { this.audioNextTuen.play() }
     } else if (messageType === ChatSystemType.START) {
       message = this.makeTimerStartMessage()
     } else if (messageType === ChatSystemType.PRECAUTION) {
       message = this.makeTimerPrecautionMessage()
-      this.audioPrecaution.play()
+      if (AppConfig.data.chat_useSound) { this.audioPrecaution.play() }
     } else {
       return // ignore illegal type
     }

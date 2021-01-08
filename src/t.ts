@@ -322,6 +322,7 @@ export class T {
       },
       "Config|Chat" : {
         "Notification Color" : "通知時の背景色",
+        "Play sound on timer-notifications" : "タイマー通知で音を出す",
       },
       "Config|Monitor" : {
         "Background Color On Loss" : "通信断の際の背景色",
@@ -487,6 +488,7 @@ export class T {
       },
       "Config|Chat" : {
         "Notification Color" : "สีเตือน",
+        // "Play sound on timer-notifications" : "",
       },
       "Config|Monitor" : {
         "Background Color On Loss" : "สีพื้นหลัง  เปิดและตัด",

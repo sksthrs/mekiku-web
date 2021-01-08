@@ -138,6 +138,7 @@ export class AppConfig {
   chat_backColor: string = "#000000";
   chat_notifyColor: string = "#ff0000";
   chat_timer: number = 5;
+  chat_useSound: boolean = true
 
   // monitor pane
   monitor_font_familyName: string = "";
