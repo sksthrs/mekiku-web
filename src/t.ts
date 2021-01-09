@@ -198,6 +198,7 @@ export class T {
         "English" : "日本語", // 必須：その言語による、その言語名。訳語ではない。
       },
       "General" : {
+        "mekiku-web" : "web版mekiku",
         "OK" : "OK",
         "Cancel" : "キャンセル",
         "Error" : "エラー",
@@ -364,6 +365,7 @@ export class T {
         "English" : "ภาษาไทย",
       },
       "General" : {
+        // "mekiku-web" : "",
         "OK" : "OK",
         "Cancel" : "ยกเลิก",
         "Error" : "ข้อผิดพลาด",
