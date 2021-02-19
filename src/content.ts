@@ -103,7 +103,7 @@ export class ContentUtil {
    */
   static hasDisplayData(d:any) : d is ContentDataDisplay {
     if (!d) return false
-    if (d.D && typeof d.D === 'string') return true
+    if (d.D != null && typeof d.D === 'string') return true
     return false
   }
 
