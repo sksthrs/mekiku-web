@@ -22,7 +22,6 @@ class DialogLogin {
   onDownloadChat: () => void = () => {}
 
   constructor() {
-    Log.w('Info', 'DialogLogin.ctor begins')
     this.setEvents()
     this.updateState()
   }
@@ -34,7 +33,6 @@ class DialogLogin {
       info.memberType = (this.subtitlerRadio.checked) ? 'wi' : 'wv'
       info.name = this.nameInput.value
       info.pass = this.passInput.value
-      Log.w('Info', `Login clicked. info=${JSON.stringify(info)}`)
       this.hideDialog()
       this.onLoginClick(info)
     })

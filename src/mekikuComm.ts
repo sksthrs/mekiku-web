@@ -99,10 +99,10 @@ class MekikuComm {
       debug: this.openOption.debugLevel,
     }
     if (this.openOption.id != null) {
-      Log.w('Info',`comm.open : construct new peer(id=${this.openOption.id})`)
+      // Log.w('Info',`comm.open : construct new peer(id=${this.openOption.id})`)
       this.peer = new Peer(this.openOption.id, opt)
     } else {
-      Log.w('Info',`comm.open : construct new peer(id: set by skyway)`)
+      // Log.w('Info',`comm.open : construct new peer(id: set by skyway)`)
       this.peer = new Peer(opt)
     }
     this.setPeerEvents(this.peer)
@@ -176,17 +176,17 @@ class MekikuComm {
     const sendBase = new ContentToSendClass(name,type)
     const d = {...data , ...sendBase}
     if (this.room != null) {
-      Log.w('Info',`send data:${JSON.stringify(d)}`)
+      // Log.w('Info',`send data:${JSON.stringify(d)}`)
       this.room?.send(d)
     } else [
-      Log.w('Info',`(no room, not sent) data:${JSON.stringify(d)}`)
+      // Log.w('Info',`(no room, not sent) data:${JSON.stringify(d)}`)
     ]
     return d
   }
 
   private setPeerEvents(p:Peer) {
     p.on('open', id => {
-      Log.w('Info',`peer opened id=${id}`)
+      // Log.w('Info',`peer opened id=${id}`)
       if (this.openOption?.handleOpen != null) {
         this.openOption.handleOpen(id)
         delete this.openOption
@@ -194,13 +194,13 @@ class MekikuComm {
       this.onPeerIdAcquired(id)
     })
     p.on('close', () => {
-      Log.w('Info',`peer closed`)
+      // Log.w('Info',`peer closed`)
     })
     p.on('connection', conn => {
-      Log.w('Info',`peer connected from ${JSON.stringify(conn)}`)
+      // Log.w('Info',`peer connected from ${JSON.stringify(conn)}`)
     })
     p.on('disconnected', id => {
-      Log.w('Info',`peer disconnected id=${id}`)
+      // Log.w('Info',`peer disconnected id=${id}`)
     })
     p.on('error', err => {
       Log.w('Error',`peer error (${err.type}) <${err.message}>`)
@@ -210,27 +210,27 @@ class MekikuComm {
 
   private setRoomEvents(r:SFURoom|MeshRoom) {
     r.on('open', () => {
-      Log.w('Info',`room opened`)
+      // Log.w('Info',`room opened`)
       this.onJoinedRoom()
     })
     r.on('peerJoin', peerId => {
-      Log.w('Info',`room : ${peerId} joined`)
+      // Log.w('Info',`room : ${peerId} joined`)
       this.onSomeoneJoined(peerId)
     })
     r.on('peerLeave', peerId => {
-      Log.w('Info',`room : ${peerId} left`)
+      // Log.w('Info',`room : ${peerId} left`)
       this.onSomeoneLeft(peerId)
     })
     r.on('data', ({src,data}) => {
       const t = Date.now()
-      Log.w('Info',`room: data from ${src} : ${JSON.stringify(data)}`)
+      // Log.w('Info',`room: data from ${src} : ${JSON.stringify(data)}`)
       const d = ContentClass.fromAny(src,data)
       if (d != null) {
         this.onReceived(d)
       }
     })
     r.on('close', () => {
-      Log.w('Info',`room closed`)
+      // Log.w('Info',`room closed`)
       delete this.room
       delete this.info
       this.peer?.disconnect()
