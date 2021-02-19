@@ -394,9 +394,9 @@ export class T {
         "Timer started. Next " : "ไทเมอร์เริ่ม ถัดไป ",
         "Timer halted." : "ไทเมอร์หยุด ",
         // "login" : "", // real message : "(login : NAME_OF_MEMBER)"
-        // "New viewer joined." : "",
+        // "New viewer" : "",
         // "logout" : "", // real message : "(logout : NAME_OF_MEMBER)"
-        // "A viewer left." : "",
+        // "A viewer left" : "",
       },
       "Monitor" : {
         "Input Monitor" : "มอนิเตอร์อินพุท",
