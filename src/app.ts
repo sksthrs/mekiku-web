@@ -764,6 +764,11 @@ class App {
     window.addEventListener('resize', ev => {
       this.paneMain.updateScreen()
     })
+    document.addEventListener('visibilitychange', ev => {
+      if (document.hidden) {
+        this.paneMain.stopScrollAndJumpToLatest()
+      }
+    })
     document.addEventListener('keydown', ev => {
       // no F5 reload when logged in
       if (ev.key === "F5" && this.comm.isInRoom()) {
