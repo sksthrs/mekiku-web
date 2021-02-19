@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="mekiku.css" rel="stylesheet">
+  <link rel="icon" href="favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <title>mekiku-web</title>
+</head>
+<body>
+  <div id="app_control"><span id="short_state" class="bottom"></span>
+    <span class="lsf buttonlike" id="appSetting">setting</span>
+    <span class="lsf buttonlike" id="appLogout">logout</span>
+    <a id="file-download" download href="data:,hello" class="no-show"></a>
+    <input type="file" id="pft-file-opener" class="no-show">
+    <input type="file" id="cfg-file-opener" class="no-show">
+  </div>
+  <div id="container">
+
+    <div id="pane1" class="h_pane">
+
+      <div id="display-input">
+        <div id="display" class="pane">
+          <div id="mainText" class="scroll wrap"></div>
+          <div id="mainLineHeightChecker">字</div>
+          <div id="mainCache" class="wrap"></div>
+        </div>
+        <div id="input" class="pane">
+          <div id="input-title" class="titlebar">Input Window</div>
+          <input type="text" id="input1" class="inputArea" autocomplete="off">
+          <input type="text" id="input2" class="inputArea" autocomplete="off">
+        </div>
+      </div>
+
+      <div id="monitor" class="pane">
+        <div id="monitor-title" class="titlebar">Input Monitor</div>
+        <table id="monitorTable">
+          <tr>
+            <td id="monitorHeader1" class="header monitorColumn1">
+              <span class="header-text l10n" data-context="Monitor" id="monitor-header-name">name</span>
+            </td>
+            <td id="monitorHeader2" class="header monitorColumn2">
+              <span class="header-text l10n" data-context="Monitor" id="monitor-header-input">current input window</span>
+            </td>
+          </tr>
+        </table>
+        <div id="monitorFooter"></div>
+        <span id="monitorFontChecker">字</span>
+      </div><!-- end of monitor pane -->
+
+    </div>
+
+    <div id="pane2" class="h_pane">
+
+      <div id="chat" class="pane">
+        <div id="chat-title" class="titlebar">Chat</div>
+        <div id="chat-toolbar" class="toolbar">
+          <button id="chat-timer-start" class="inlineButton">
+            <span id="chat-timer-start-icon" class="lsf title-l10n" title="Start" data-context="Chat">play</span>
+          </button>
+          <button id="chat-timer-pause" class="inlineButton"><span id="chat-timer-pause-icon" class="lsf title-l10n" title="Halt" data-context="Chat">pause</span></button>
+          <button id="chat-timer-reset" class="inlineButton"><span id="chat-timer-reset-icon" class="lsf title-l10n" title="Reset" data-context="Chat">refresh</span></button>
+          <div id="chat-timer-now">-:--</div>
+          <button id="chat-timer-up" class="inlineButton"><span id="chat-timer-up-icon" class="lsf title-l10n" title="Increase Timer By A Minute" data-context="Chat">up</span></button>
+          <input id="chat-timer-value" type="text" autocomplete="off" maxlength="2" value="5">
+          <button id="chat-timer-down" class="inlineButton"><span id="chat-timer-down-icon" class="lsf title-l10n" title="Decrease Timer By A Minute" data-context="Chat">down</span></button>
+        </div>
+        <textarea id="chat-log" class="wrap" readonly></textarea>
+        <input id="chat-input" type="text" autocomplete="off">
+      </div>
+
+      <div id="fkey" class="pane">
+        <div id="fkey-title" class="titlebar">Shortcut</div>
+        <table id="fkey-table">
+          <tr><td class="fkey-label" id="fkey01-label">F1</td><td class="fkey-text"><input type="text" id="fkey01" class="fkey-input"></td></tr>
+          <tr><td class="fkey-label" id="fkey02-label">F2</td><td class="fkey-text"><input type="text" id="fkey02" class="fkey-input"></td></tr>
+          <tr><td class="fkey-label" id="fkey03-label">F3</td><td class="fkey-text"><input type="text" id="fkey03" class="fkey-input"></td></tr>
+          <tr><td class="fkey-label" id="fkey04-label">F4</td><td class="fkey-text"><input type="text" id="fkey04" class="fkey-input"></td></tr>
+          <tr><td class="fkey-label" id="fkey05-label">F5</td><td class="fkey-text"><input type="text" id="fkey05" class="fkey-input"></td></tr>
+          <tr><td class="fkey-label" id="fkey06-label">F6</td><td class="fkey-text"><input type="text" id="fkey06" class="fkey-input"></td></tr>
+          <tr><td class="fkey-label" id="fkey07-label">F7</td><td class="fkey-text"><input type="text" id="fkey07" class="fkey-input"></td></tr>
+          <tr><td class="fkey-label" id="fkey08-label">F8</td><td class="fkey-text"><div id="cfkey08" class="fkey-text-readonly l10n" data-context="Fkey">Parenthesize all</div></td></tr>
+          <tr><td class="fkey-label" id="fkey09-label">F9</td><td class="fkey-text"><div id="cfkey09" class="fkey-text-readonly l10n" data-context="Fkey">Undo</div></td></tr>
+        </table>
+      </div>
+
+    </div>
+
+    <div id="pane3" class="h_pane">
+
+      <div id="pft" class="pane">
+        <div id="pft-title" class="titlebar">PFT (Pre-Formatted Text)</div>
+        <div id="pft-toolbar" class="toolbar">
+          <button id="pft-open-file" class="inlineButton"><span id="pft-open-file-icon" class="lsf title-l10n" title="Open (Ctrl+O)" data-context="PFT">folder</span></button>
+          <button id="pft-save-file" class="inlineButton"><span id="pft-save-file-icon" class="lsf title-l10n" title="Save As (Ctrl+S)" data-context="PFT">save</span></button>
+          <button id="pft-next-comment" class="inlineButton"><span id="pft-next-comment-icon" class="lsf title-l10n" title="Next Comment (Ctrl+down)" data-context="PFT">down</span></button>
+          <button id="pft-previous-comment" class="inlineButton"><span id="pft-previous-comment-icon" class="lsf title-l10n" title="Previous Comment (Ctrl+up)" data-context="PFT">up</span></button>
+          <button id="pft-previous-pft" class="inlineButton"><span id="pft-previous-pft-icon" class="lsf title-l10n" title="Previous Window (Ctrl+left)" data-context="PFT">left</span></button>
+          <button id="pft-next-pft" class="inlineButton"><span id="pft-next-pft-icon" class="lsf title-l10n" title="Next Window (Ctrl+right)" data-context="PFT">right</span></button>
+        </div>
+        <div id="pft-panes">
+          <div id="pft1">
+            <div id="pft1-name"><span id="pft1-name-text"></span></div>
+            <textarea id="pft1-text" autocomplete="off" wrap="off"></textarea>
+          </div>
+          <div id="pft2">
+            <div id="pft2-name"><span id="pft2-name-text"></span></div>
+            <textarea id="pft2-text" autocomplete="off" wrap="off"></textarea>
+          </div>
+          <div id="pft3">
+            <div id="pft3-name"><span id="pft3-name-text"></span></div>
+            <textarea id="pft3-text" autocomplete="off" wrap="off"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div id="pftMon">
+        <div id="pftMon-title" class="titlebar">PFT Monitor</div>
+        <div id="pftMon-log">
+          <div id="pftMon-above"></div>
+          <textarea readonly id="pftMon-log-text" wrap="off"></textarea>
+        </div>
+        <div id="pftMon-state"><span id="pftMon-state-text"></span></div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="dialog" id="notify"><div class="dialog_content">
+    <div id="notify-title"></div>
+    <div id="notify-message"></div>
+    <div id="notify-buttons">
+      <button id="notify-ok-button" class="submit">OK</button>
+    </div>
+  </div></div>
+
+  <div class="dialog" id="inputdialog"><div class="dialog_content">
+    <div id="inputdialog_input_pane">
+      <label id="inputdialog_label" for="inputdialog_text">(label)</label>
+      <input type="text" id="inputdialog_text" class="w16">
+    </div>
+    <div id="inputdialog-buttons">
+      <button id="inputdialog-ok-button" class="submit l10n" data-context="General">OK</button>
+      <button id="inputdialog-cancel-button" class="cancel l10n" data-context="General">Cancel</button>
+    </div>
+  </div></div>
+
+  <div id="login" class="dialog open"><div class="dialog_content">
+    <table id="loginTable"><tbody>
+      <tr id="loginTable_styleRow" class="single_column">
+        <td colspan="2">
+          <span class="radio_choice">
+            <input type="radio" checked id="role0" name="role" value="wv" class="radio_toggle">
+            <label for="role0" id="role0-label" class="label_toggle l10n" data-context="Login">Viewer</label>
+          </span>
+          <span class="radio_choice">
+            <input type="radio" id="role1" name="role" value="wi" class="radio_toggle">
+            <label for="role1" id="role1-label" class="label_toggle l10n" data-context="Login">Subtitler</label>
+          </span>
+        </td>
+      </tr>
+      <tr id="loginTable_roomRow">
+        <td id="login-key-room" class="login-keys l10n" data-context="Login">Room</td>
+        <td class="login-values">
+          <input type="text" id="login-input-room" pattern="^[A-Za-z0-9]+$" autocomplete="off" required>
+        </td>
+      </tr>
+      <tr id="loginTable_nameRow">
+        <td id="login-key-name" class="login-keys l10n" data-context="Login">Name</td>
+        <td class="login-values"><input type="text" id="login-input-name" required></td>
+      </tr>
+      <tr id="loginTable_passRow">
+        <td id="login-key-pass" class="login-keys l10n" data-context="Login">Password</td>
+        <td class="login-values"><input type="password" id="login-input-pass" required></td>
+      </tr>
+      <tr id="loginTable_buttonRow" class="single_column">
+        <td colspan="2">
+          <button id="login-button" type="button" class="submit" disabled>Login</button>
+        </td>
+      </tr>
+    </tbody></table>
+    <div id="loginDialog_log_download_pane">
+      <button id="loginDialog_main_log_download" class="l10n" data-context="Config|Misc">Save main log</button>
+      <button id="loginDialog_chat_log_download" class="l10n" data-context="Config|Misc">Save chat log</button>
+    </div>
+  </div></div>
+
+  <div id="config-container" class="dialog">
+    <div id="config" class="dialog_content tab_menu">
+      <input id="menu-general" type="radio" name="config-section" checked>
+      <label for="menu-general" class="tab_item"><span id="menu-general-text" class="l10n" data-context="Config|Misc">General</span></label>
+      <input id="menu-main" type="radio" name="config-section">
+      <label for="menu-main" class="tab_item"><span id="menu-main-text" class="l10n" data-context="Config|Main">Main Display</span></label>
+      <input id="menu-input" type="radio" name="config-section">
+      <label for="menu-input" class="tab_item"><span id="menu-input-text" class="l10n" data-context="Input">Input Window</span></label>
+      <input id="menu-chat" type="radio" name="config-section">
+      <label for="menu-chat" class="tab_item"><span id="menu-chat-text" class="l10n" data-context="Chat">Chat</span></label>
+      <input id="menu-monitor" type="radio" name="config-section">
+      <label for="menu-monitor" class="tab_item"><span id="menu-monitor-text" class="l10n" data-context="Monitor">Input Monitor</span></label>
+      <input id="menu-pft" type="radio" name="config-section">
+      <label for="menu-pft" class="tab_item"><span id="menu-pft-text" class="l10n" data-context="PFT">PFT (Pre-Formatted Text)</span></label>
+      <input id="menu-pftmon" type="radio" name="config-section">
+      <label for="menu-pftmon" class="tab_item"><span id="menu-pftmon-text" class="l10n" data-context="PftMon">PFT Monitor</span></label>
+      <input id="menu-fkey" type="radio" name="config-section">
+      <label for="menu-fkey" class="tab_item"><span id="menu-fkey-text" class="l10n" data-context="Fkey">Shortcut</span></label>
+
+      <!-- ____________________ Config : General ____________________ -->
+      <div id="config-about-general" class="tab_content">
+      
+        <h2 id="config-general">
+          <span id="config-general-text" class="l10n" data-context="Config|Misc">General</span>
+        </h2>
+      
+        <div class="config-singleline">
+          <select id="config-select-locale" name="config-locale">
+          </select>
+        </div>
+
+        <div class="config-singleline">
+          <button id="config-open" class="l10n" data-context="Menu|Menu">Open Settings...</button>
+        </div>
+
+        <div class="config-singleline">
+          <button id="config-save" class="l10n" data-context="Menu|Menu">Save Settings As...</button>
+        </div>
+
+        <div class="config-singleline">
+          <button id="config-reset" class="l10n" data-context="Menu|Menu">Reset All Settings</button>
+        </div>
+      </div>
+      
+      <!-- ____________________ Config : Main Display pane ____________________ -->
+      <div id="config-about-main" class="tab_content">
+      
+        <h2 id="config-main">
+          <span id="config-main-text" class="l10n" data-context="Config|Main">Main Display</span>
+        </h2>
+      
+        <div class="config-singleline">
+          <span id="config-main-font-size-text" class="config-key l10n" data-context="Config|General">Font Size</span>
+          <input id="config_main_font_size" class="w4" type="number" min="6" max="128" required>
+        </div>
+        <div class="config-singleline">
+          <span id="config-main-font-familyName-text" class="config-key l10n" data-context="Config|General">Font Name</span>
+          <input id="config_main_font_familyName" class="w16" type="text">
+        </div>
+        <div class="config-singleline">
+          <span id="config-main-textcolor-text" class="config-key l10n" data-context="Config|General">Font Color</span>
+          <input id="config_main_foreColor" type="color">
+        </div>
+        <div class="config-singleline">
+          <label>
+            <span id="config-main-is-bold-text" class="config-key l10n" data-context="Config|General">Bold</span>
+            <input id="config_main_font_isBold" type="checkbox">
+          </label>
+        </div>
+        <div class="config-singleline">
+          <span id="config-main-backcolor-text" class="config-key l10n" data-context="Config|General">Background Color</span>
+          <input id="config_main_backColor" type="color">
+        </div>
+        <div class="config-singleline">
+          <span id="config-main-line-height-text" class="config-key l10n" data-context="Config|Main">Line Height</span>
+          <input id="config_main_lineHeight" class="w5" type="number" min="100" max="200" step="5" required>
+        </div>
+        <div class="config-singleline">
+          <span id="config-main-scroll-time-text" class="config-key l10n" data-context="Config|Main">Scroll interval per line</span>
+          <input id="config_main_scrollTime" class="w5" type="number" min="50" max="2000" step="50" required step="50">
+          <span id="config-main-scroll-time-unit" class="l10n" data-context="Config|Main">msec</span>
+        </div>
+      
+      </div>
+      
+      <!-- ____________________ Config : Input pane ____________________ -->
+      <div id="config-about-input" class="tab_content">
+      
+        <h2 id="config-input">
+          <span id="config-input-text" class="l10n" data-context="Input">Input Window</span>
+          <span class="shortcut">(Ctrl+I)</span>
+        </h2>
+      
+        <div class="config-singleline">
+          <span id="config-input-font-size-text" class="config-key l10n" data-context="Config|General">Font Size</span>
+          <input id="config_input_font_size" class="w4" type="number" min="6" max="128" required>
+        </div>
+        <div class="config-singleline">
+          <span id="config-input-textcolor-text" class="config-key l10n" data-context="Config|General">Font Color</span>
+          <input id="config_input_foreColor" type="color">
+        </div>
+        <div class="config-singleline">
+          <label>
+            <span id="config-input-is-bold-text" class="config-key l10n" data-context="Config|General">Bold</span>
+            <input id="config_input_font_isBold" type="checkbox">
+          </label>
+        </div>
+        <div class="config-singleline">
+          <span id="config-input-backcolor-text" class="config-key l10n" data-context="Config|General">Background Color</span>
+          <input id="config_input_backColor" type="color">
+        </div>
+        <div class="config-singleline">
+          <span id="config-input-parentheses-text" class="config-key l10n" data-context="Config|Input">Parentheses on F8 press</span>
+          <input id="config-input_parentheses_1" class="w4" type="text">
+          <input id="config-input_parentheses_2" class="w4" type="text">
+        </div>
+        <div class="config-singleline">
+          <span id="config-input-parentheses-shift-text" class="config-key l10n" data-context="Config|Input">Parentheses on Shift+F8 press</span>
+          <input id="config-input_parenthesesShift_1" class="w4" type="text">
+          <input id="config-input_parenthesesShift_2" class="w4" type="text">
+        </div>
+      
+      </div>
+      
+      <!-- ____________________ Config : Chat pane ____________________ -->
+      <div id="config-about-chat" class="tab_content">
+      
+        <h2 id="config-chat">
+          <span id="config-chat-text" class="l10n" data-context="Chat">Chat</span>
+          <span class="shortcut">(Ctrl+R)</span>
+        </h2>
+      
+        <div class="config-singleline">
+          <span id="config-chat-font-size-text" class="config-key l10n" data-context="Config|General">Font Size</span>
+          <input id="config_chat_font_size" class="w4" type="number" min="6" max="128" required>
+        </div>
+        <div class="config-singleline">
+          <span id="config-chat-textcolor-text" class="config-key l10n" data-context="Config|General">Font Color</span>
+          <input id="config_chat_foreColor" type="color">
+        </div>
+        <div class="config-singleline">
+          <label>
+            <span id="config-chat-is-bold-text" class="config-key l10n" data-context="Config|General">Bold</span>
+            <input id="config_chat_font_isBold" type="checkbox">
+          </label>
+        </div>
+        <div class="config-singleline">
+          <span id="config-chat-backcolor-text" class="config-key l10n" data-context="Config|General">Background Color</span>
+          <input id="config_chat_backColor" type="color">
+        </div>
+        <div class="config-singleline">
+          <span id="config-chat-notifycolor-text" class="config-key l10n" data-context="Config|Chat">Notification Color</span>
+          <input id="config_chat_notifyColor" type="color">
+        </div>
+      
+      </div>
+      
+      <!-- ____________________ Config : Monitor pane ____________________ -->
+      <div id="config-about-monitor" class="tab_content">
+      
+        <h2 id="config-monitor">
+          <span id="config-monitor-text" class="l10n" data-context="Monitor">Input Monitor</span>
+          <span class="shortcut">(Ctrl+M)</span>
+        </h2>
+      
+        <div class="config-singleline">
+          <span id="config-monitor-font-size-text" class="config-key l10n" data-context="Config|General">Font Size</span>
+          <input id="config_monitor_font_size" class="w4" type="number" min="6" max="128" required>
+        </div>
+        <div class="config-singleline">
+          <span id="config-monitor-textcolor-text" class="config-key l10n" data-context="Config|General">Font Color</span>
+          <input id="config_monitor_foreColor" type="color">
+        </div>
+        <div class="config-singleline">
+          <label>
+            <span id="config-monitor-is-bold-text" class="config-key l10n" data-context="Config|General">Bold</span>
+            <input id="config_monitor_font_isBold" type="checkbox">
+          </label>
+        </div>
+        <div class="config-singleline">
+          <span id="config-monitor-backcolor-text" class="config-key l10n" data-context="Config|General">Background Color</span>
+          <input id="config_monitor_backColor" type="color">
+        </div>
+      
+      </div>
+      
+      <!-- ____________________ Config : PFT pane ____________________ -->
+      <div id="config-about-pft" class="tab_content">
+      
+        <h2 id="config-pft">
+          <span id="config-pft-text" class="l10n" data-context="PFT">PFT (Pre-Formatted Text)</span>
+          <span class="shortcut">(Ctrl+P)</span>
+        </h2>
+      
+        <div class="config-singleline">
+          <span id="config-pft-font-size-text" class="config-key l10n" data-context="Config|General">Font Size</span>
+          <input id="config_pft_font_size" class="w4" type="number" min="6" max="128" required>
+        </div>
+        <div class="config-singleline">
+          <span id="config-pft-textcolor-text" class="config-key l10n" data-context="Config|General">Font Color</span>
+          <input id="config_pft_foreColor" type="color">
+        </div>
+        <div class="config-singleline">
+          <label>
+            <span id="config-pft-is-bold-text" class="config-key l10n" data-context="Config|General">Bold</span>
+            <input id="config_pft_font_isBold" type="checkbox">
+          </label>
+        </div>
+        <div class="config-singleline">
+          <span id="config-pft-backcolor-text" class="config-key l10n" data-context="Config|General">Background Color</span>
+          <input id="config_pft_backColor" type="color">
+        </div>
+        <div class="config-singleline">
+          <span id="config-pft-backcolor-name" class="config-key l10n" data-context="Config|PFT">Background Color (Name)</span>
+          <input id="config_pft_nameBackColor" type="color">
+        </div>
+        <div class="config-singleline">
+          <span id="config-pft-backcolor-other-name" class="config-key l10n" data-context="Config|PFT">Background Color (Name of Other Panes)</span>
+          <input id="config_pft_nameOtherBackColor" type="color">
+        </div>
+
+        <div class="config-singleline">
+          <label>
+            <input id="config_pft_show_isAll" type="checkbox">
+            <span id="config-pft-display-all-text" class="l10n" data-context="Config|PFT">Display All</span>
+          </label>
+        </div>
+
+        <div class="group">
+          <span id="config-pft-show-active-ratio-title" class="l10n" data-context="Config|PFT">Current Window Width</span>
+          <br><label>
+            <input type="radio" id="config_pft_show_active_ratio_100" name="pft_show_active_ratio" value="100">
+            <span id="config-pft-show-active-ratio-100-text" class="l10n" data-context="Config|PFT">Same As Others (x1.0)</span>
+          </label>
+          <br><label>
+            <input type="radio" id="config_pft_show_active_ratio_150" name="pft_show_active_ratio" value="150">
+            <span id="config-pft-show-active-ratio-150-text" class="l10n" data-context="Config|PFT">50% wider (x1.5)</span>
+          </label>
+          <br><label>
+            <input type="radio" id="config_pft_show_active_ratio_200" name="pft_show_active_ratio" value="200">
+            <span id="config-pft-show-active-ratio-200-text" class="l10n" data-context="Config|PFT">double (x2.0)</span>
+          </label>
+          <br><label>
+            <input type="radio" id="config_pft_show_active_ratio_300" name="pft_show_active_ratio" value="300">
+            <span id="config-pft-show-active-ratio-300-text" class="l10n" data-context="Config|PFT">triple (x3.0)</span>
+          </label>
+        </div>
+
+      </div>
+      
+      <!-- ____________________ Config : PFT-Monitor pane ____________________ -->
+      <div id="config-about-pftmon" class="tab_content">
+      
+        <h2 id="config-pftmon">
+          <span id="config-pftmon-text" class="l10n" data-context="PftMon">PFT Monitor</span>
+        </h2>
+      
+        <div class="config-singleline">
+          <span id="config-pftmon-font-size-text" class="config-key l10n" data-context="Config|General">Font Size</span>
+          <input id="config_pftMon_font_size" class="w4" type="number" min="6" max="128" required>
+        </div>
+        <div class="config-singleline">
+          <span id="config-pftmon-textcolor-text" class="config-key l10n" data-context="Config|General">Font Color</span>
+          <input id="config_pftMon_foreColor" type="color">
+        </div>
+        <div class="config-singleline">
+          <label>
+            <span id="config-pftmon-is-bold-text" class="config-key l10n" data-context="Config|General">Bold</span>
+            <input id="config_pftMon_font_isBold" type="checkbox">
+          </label>
+        </div>
+        <div class="config-singleline">
+          <span id="config-pftmon-backcolor-text" class="config-key l10n" data-context="Config|General">Background Color</span>
+          <input id="config_pftMon_backColor" type="color">
+        </div>
+      
+      </div>
+      
+      <!-- ____________________ Config : F-key pane ____________________ -->
+      <div id="config-about-fkey" class="tab_content">
+      
+        <h2 id="config-fkey">
+          <span id="config-fkey-text" class="l10n" data-context="Fkey">Shortcut</span>
+          <span class="shortcut">(Ctrl+F)</span>
+        </h2>
+      
+        <div class="config-singleline">
+          <span id="config-fkey-font-size-text" class="config-key l10n" data-context="Config|General">Font Size</span>
+          <input id="config_fkey_font_size" class="w4" type="number" min="6" max="128" required>
+        </div>
+        <div class="config-singleline">
+          <span id="config-fkey-textcolor-text" class="config-key l10n" data-context="Config|General">Font Color</span>
+          <input id="config_fkey_foreColor" type="color">
+        </div>
+        <div class="config-singleline">
+          <label>
+            <span id="config-fkey-is-bold-text" class="config-key l10n" data-context="Config|General">Bold</span>
+            <input id="config_fkey_font_isBold" type="checkbox">
+          </label>
+        </div>
+        <div class="config-singleline">
+          <span id="config-fkey-backcolor-text" class="config-key l10n" data-context="Config|General">Background Color</span>
+          <input id="config_fkey_backColor" type="color">
+        </div>
+      
+      </div>
+      
+    </div>
+    <div id="config-button-pane">
+      <button id="config-button-ok" class="l10n submit" data-context="General">OK</button>
+      <button id="config-button-cancel" class="l10n cancel" data-context="General">Cancel</button>
+    </div>
+  </div><!-- end of config -->
+
+
+  <div id="config-view-container" class="dialog">
+    <div id="config-view" class="dialog_content tab_menu">
+      <input id="menu-view-general" type="radio" name="config-section" checked>
+      <label for="menu-view-general" class="tab_item"><span id="menu-view-general-text" class="l10n" data-context="Config|Misc">General</span></label>
+      <input id="menu-view-main" type="radio" name="config-section">
+      <label for="menu-view-main" class="tab_item"><span id="menu-view-main-text" class="l10n" data-context="Config|Main">Main Display</span></label>
+
+      <!-- ____________________ Config-view : General ____________________ -->
+      <div id="config-view-about-general" class="tab_content">
+      
+        <h2 id="config-view-general">
+          <span id="config-view-general-text" class="l10n" data-context="Config|Misc">General</span>
+        </h2>
+      
+        <div class="config-singleline">
+          <select id="config-view-select-locale" name="config-locale">
+          </select>
+        </div>
+
+        <div class="config-singleline">
+          <button id="config-view-open" class="l10n" data-context="Menu|Menu">Open Settings...</button>
+        </div>
+
+        <div class="config-singleline">
+          <button id="config-view-save" class="l10n" data-context="Menu|Menu">Save Settings As...</button>
+        </div>
+
+        <div class="config-singleline">
+          <button id="config-view-reset" class="l10n" data-context="Menu|Menu">Reset All Settings</button>
+        </div>
+      </div>
+      
+      <!-- ____________________ Config-view : Main Display pane ____________________ -->
+      <div id="config-view-about-main" class="tab_content">
+      
+        <h2 id="config-view-main">
+          <span id="config-view-main-text" class="l10n" data-context="Config|Main">Main Display</span>
+        </h2>
+      
+        <div class="config-singleline">
+          <span id="config-view-main-font-size-text" class="config-key l10n" data-context="Config|General">Font Size</span>
+          <input id="config_main_v_font_size" class="w4" type="number" min="6" max="128" required>
+        </div>
+        <div class="config-singleline">
+          <span id="config-view-main-font-familyName-text" class="config-key l10n" data-context="Config|General">Font Name</span>
+          <input id="config_main_v_font_familyName" class="w16" type="text">
+        </div>
+        <div class="config-singleline">
+          <span id="config-view-main-textcolor-text" class="config-key l10n" data-context="Config|General">Font Color</span>
+          <input id="config_main_v_foreColor" type="color">
+        </div>
+        <div class="config-singleline">
+          <label>
+            <span id="config-view-main-is-bold-text" class="config-key l10n" data-context="Config|General">Bold</span>
+            <input id="config_main_v_font_isBold" type="checkbox">
+          </label>
+        </div>
+        <div class="config-singleline">
+          <span id="config-view-main-backcolor-text" class="config-key l10n" data-context="Config|General">Background Color</span>
+          <input id="config_main_v_backColor" type="color">
+        </div>
+        <div class="config-singleline">
+          <span id="config-view-main-line-height-text" class="config-key l10n" data-context="Config|Main">Line Height</span>
+          <input id="config_main_v_lineHeight" class="w5" type="number" min="100" max="200" step="5" required>
+        </div>
+        <div class="config-singleline">
+          <span id="config-view-main-scroll-time-text" class="config-key l10n" data-context="Config|Main">Scroll interval per line</span>
+          <input id="config_main_v_scrollTime" class="w5" type="number" min="50" max="2000" step="50" required step="50">
+          <span id="config-view-main-scroll-time-unit" class="l10n" data-context="Config|Main">msec</span>
+        </div>
+      
+      </div>
+      
+    </div>
+    <div id="config-view-button-pane">
+      <button id="config-view-button-ok" class="l10n submit" data-context="General">OK</button>
+      <button id="config-view-button-cancel" class="l10n cancel" data-context="General">Cancel</button>
+    </div>
+  </div><!-- end of config-view -->
+
+  <script src="https://cdn.webrtc.ecl.ntt.com/skyway-latest.js"></script>
+  <script src="mekiku.js"></script>
+</body>
+</html>

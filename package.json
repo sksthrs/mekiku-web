@@ -1,0 +1,24 @@
+{
+  "name": "mekiku-web",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack --mode=development",
+    "build-release": "webpack --mode=release"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/skyway": "0.0.29",
+    "ts-loader": "^8.0.2",
+    "typescript": "^3.9.7",
+    "updates": "^10.3.3",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
+  },
+  "dependencies": {
+    "split.js": "^1.6.2"
+  }
+}
