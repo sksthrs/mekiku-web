@@ -1,15 +1,15 @@
 {
   "name": "mekiku-web",
   "version": "1.0.0",
-  "description": "",
+  "description": "subtitling on the web",
   "main": "index.js",
   "scripts": {
     "build": "webpack --mode=development",
     "build-release": "webpack --mode=production"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["subtitle", "note-taking", "要約筆記", "mekiku"],
+  "author": "mekiku.com",
+  "license": "MIT",
   "devDependencies": {
     "@types/skyway": "0.0.29",
     "ts-loader": "^8.0.11",
