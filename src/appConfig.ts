@@ -42,7 +42,7 @@ export class AppConfig {
 
   // display pane (viewer mode)
   main_v_font_familyName: string = "";
-  main_v_font_size: number = 42;
+  main_v_font_size: number = 32;
   main_v_font_isBold: boolean = false;
   main_v_foreColor: string = "#ffffff";
   main_v_backColor: string = "#000000";
