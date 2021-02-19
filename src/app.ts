@@ -111,6 +111,30 @@ class App {
       this.dialogLogin.showDialog()
     }
 
+    // fetch config.json
+    fetch("config.json")
+    .then(response => {
+      return response.json()
+    })
+    .then(json => {
+      if ("api_key" in json) {
+        const apikey = json.api_key as string
+        TmpConfig.setApiKey(apikey)
+        this.dialogLogin.setLoginCondition(1)
+      }
+      if ("debug_level" in json) {
+        const debuglevel = json.debug_level as number
+        TmpConfig.setDebugLevel(debuglevel)
+      }
+      if ("auth_url" in json) {
+        const authurl = json.auth_url as string
+        TmpConfig.setAuthUrl(authurl)
+        if (authurl.length > 0) {
+          this.dialogLogin.showPass()
+        }
+      }
+    })
+
     this.paneMain = new PaneMain()
 
     this.paneFkey = new PaneFkey()
@@ -271,11 +295,15 @@ class App {
       TmpConfig.setName(info.name)
       TmpConfig.setMemberType(info.memberType)
       let login_info = info
-      this.comm.open('03ab2f52-64bb-4ffa-a395-9a335b8ce95d',{
-        handleOpen: id => {
-          this.comm.joinRoom(login_info)
-        },
-      })
+      this.comm.open(
+        TmpConfig.getApiKey(),
+        {
+          handleOpen: id => {
+            this.comm.joinRoom(login_info)
+          },
+          debugLevel: TmpConfig.getDebugLevel()
+        }
+      )
       this.updateRoomName(info.room)
       // 'pass' is not used because no password
       if (info.memberType === MemberType.WEB_VIEWER) {

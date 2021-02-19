@@ -22,6 +22,31 @@ class TmpConfig {
   static setMemberType(memberType:string) {
     this.memberType = memberType
   }
+
+  // API key
+  private static apiKey:string = ''
+  static getApiKey() : string {
+    return this.apiKey
+  }
+  static setApiKey(key:string) {
+    this.apiKey = key
+  }
+
+  private static debugLevel:number = 1
+  static getDebugLevel() : number {
+    return this.debugLevel
+  }
+  static setDebugLevel(level:number) {
+    this.debugLevel = level
+  }
+
+  private static authUrl:string = ''
+  static getAuthUrl() : string {
+    return this.authUrl
+  }
+  static setAuthUrl(url:string) {
+    this.authUrl = url
+  }
 }
 
 export default TmpConfig
