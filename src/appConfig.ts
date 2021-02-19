@@ -37,7 +37,7 @@ export class AppConfig {
   main_outline_color: string = "#80ff80";
   main_outline_width: number = 2;
 
-  main_scrollTime: number = 700; // [msec]
+  main_scrollMsec: number = 200; // [msec]
   main_lineHeight: number = 140; // [%]
 
   // display pane (viewer mode)
@@ -51,7 +51,7 @@ export class AppConfig {
   main_v_outline_color: string = "#80ff80";
   main_v_outline_width: number = 2;
 
-  main_v_scrollTime: number = 700; // [msec]
+  main_v_scrollMsec: number = 200; // [msec]
   main_v_lineHeight: number = 140; // [%]
 
   // input pane
