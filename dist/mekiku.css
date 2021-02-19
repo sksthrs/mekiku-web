@@ -677,6 +677,12 @@ div#pft-panes {
 #login-button {
   font-size: inherit;
 }
+#login .footer {
+  text-align: end;
+  border-top: 1px solid black;
+  margin-top: 0.3em;
+  font-size: smaller;
+}
 
 /* config */
 #config-container , #config-view-container {
