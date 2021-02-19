@@ -646,6 +646,12 @@ div#pft-panes {
 }
 
 /* login dialog */
+#login .title {
+  text-align: center;
+  border-bottom: 1px solid black;
+  padding-bottom: 0px;
+  margin-bottom: 0.3em;
+}
 #login input {
   font-family: inherit;
   font-size   : 100%;
