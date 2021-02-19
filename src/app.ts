@@ -63,7 +63,6 @@ class App {
     const locale = AppConfig.data.getLocale()
     Log.w("Info",`locale:${locale}`)
     T.setLocale(locale)
-    this.setSplits()
 
     window.addEventListener('beforeunload', (ev) => { this.onBeforeUnload(ev) })
     window.addEventListener('unload', (ev) => { this.onUnload(ev) })
@@ -347,6 +346,7 @@ class App {
 
   private setSubtitlerStyle() {
     this.isViewer = false
+    this.setSplits()
     this.paneMain.setViewerMode(this.isViewer)
     this.paneMain.updateConfig()
     this.appControl.hideShortState()
@@ -362,6 +362,7 @@ class App {
 
   private setViewerStyle() {
     this.isViewer = true
+    this.unsetSplits()
     this.paneMain.setViewerMode(this.isViewer)
     this.paneMain.updateConfig()
     this.appControl.showShortState()
@@ -428,8 +429,6 @@ class App {
     const locale = AppConfig.data.getLocale()
     T.setLocale(locale)
     this.localizeAll()
-
-    this.setSplits()
   }
 
   private setSplits() {
@@ -497,6 +496,21 @@ class App {
         AppConfig.data.misc_pft_height,
         AppConfig.data.misc_pftmon_height,
       ])
+    }
+  }
+
+  private unsetSplits() {
+    if (this.splitContainer != null) {
+      this.splitContainer.destroy(true)
+      delete this.splitContainer
+    }
+    if (this.splitDisplayMonitor != null) {
+      this.splitDisplayMonitor.destroy(true)
+      delete this.splitDisplayMonitor
+    }
+    if (this.splitPft != null) {
+      this.splitPft.destroy(true)
+      delete this.splitPft
     }
   }
 
