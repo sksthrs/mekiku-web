@@ -121,6 +121,10 @@ class DialogLogin {
     this.focusMe()
   }
 
+  isShown() : boolean {
+    return UtilDom.isShown(this.dialogLogin)
+  }
+
   private focusMe() {
     const showRoom = UtilDom.isDisplayed(this.roomRow)
     const showName = UtilDom.isDisplayed(this.nameRow)

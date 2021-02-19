@@ -25,6 +25,7 @@ import DialogInput from "./dialogInput";
 import TmpConfig from "./TmpConfig";
 import { DialogConfigViewer } from "./dialogConfigViewer";
 import Split from "split.js"
+import DialogNotify from "./dialogNotify";
 
 class App {
   private comm: MekikuComm
@@ -45,6 +46,8 @@ class App {
   private dialogConfig: DialogConfig
   private dialogConfigViewer: DialogConfigViewer
   private dialogInput: DialogInput
+  private dialogNotify: DialogNotify
+  private loginInfo?: LoginInfo
   private id: string = ""
   private roomName: string = ""
   private panes: { [ch:string] : Pane; };
@@ -53,6 +56,7 @@ class App {
   private splitContainer?: Split.Instance
   private splitDisplayMonitor?: Split.Instance
   private splitPft?: Split.Instance
+  private isErrorHandling: boolean = false
 
   constructor() {
     const localConfig = localStorage.getItem('config')
@@ -70,6 +74,7 @@ class App {
     UtilDom.makeDialogsRespondToKey()
 
     this.dialogInput = new DialogInput()
+    this.dialogNotify = new DialogNotify()
 
     this.configFileController = new FileController('cfg-file-opener')
     this.dialogConfig = new DialogConfig()
@@ -248,11 +253,21 @@ class App {
     }
 
     this.dialogLogin.onLoginClick = info => {
+      if (info.name === "error") {
+        this.onPeerError({type:"authentication", message:"wrong password!"})
+        return
+      }
+      this.loginInfo = info
       if (info.room.length < 1) {
         info.room = location.hash
       }
       TmpConfig.setName(info.name)
-      this.comm.joinRoom(info)
+      let login_info = info
+      this.comm.open('03ab2f52-64bb-4ffa-a395-9a335b8ce95d',{
+        handleOpen: id => {
+          this.comm.joinRoom(login_info)
+        },
+      })
       this.updateRoomName(info.room)
       // 'pass' is not used because no password
       if (info.memberType === MemberType.WEB_VIEWER) {
@@ -271,6 +286,14 @@ class App {
       this.comm.queue_room(ContentUtil.makeMonitorData(text))
     })
     this.paneInput.setDoOnEnter((text) => {
+      if (text === "error1") {
+        this.onPeerError({type:"socket-error", message:"test message"})
+        return
+      }
+      if (text === "error2") {
+        this.onPeerError({type:"signaling-limited", message:"you have to pay!"})
+        return
+      }
       this.sendMain(text)
     })
     this.paneInput.setDoOnUndo(() => {
@@ -524,7 +547,7 @@ class App {
     this.paneFkey.localize()
   }
 
-  private onIdAcquired(id:string) {
+  private onPeerIdAcquired(id:string) {
     this.id = id
   }
 
@@ -535,6 +558,8 @@ class App {
 
   private onLeft() {
     if (this.dialogLogin == null) return
+    if (this.isErrorHandling) return // avoid during communication-error dialog appearing (after close it, this method is called)
+    if (this.dialogLogin.isShown()) return // already shown
     this.dialogLogin.setRoom(this.roomName)
     this.dialogLogin.setName(TmpConfig.getName())
     this.updateRoomName('')
@@ -595,9 +620,65 @@ class App {
     this.paneMain.notifyNewItemsFinish()
   }
 
+  private onAuthError() {
+    // Show auth-error on login dialog
+    this.dialogNotify.onOkClick = () => {
+      this.onLeft()
+    }
+    this.dialogNotify.showDialog(
+      T.t("Error","General"), 
+      T.t("Login failed.","Login")
+    )
+  }
+
+  private onCommunicationError(err:any) {
+    // Logout (if not done) and show notification dialog
+    this.isErrorHandling = true
+    this.comm.leaveRoom()
+    this.dialogNotify.onOkClick = () => {
+      this.isErrorHandling = false
+      this.onLeft()
+    }
+    const detail = (err.message != null) 
+      ? "\n" + T.t("Detail","General") + " : " + err.message 
+      : ""
+    this.dialogNotify.showDialog(
+      T.t("Error","General"), 
+      T.t("Communication error.","General") + detail
+    )
+  }
+
+  private onSomeError(err:any) {
+    // Logout (if not done) and show notification dialog
+    this.isErrorHandling = true
+    this.comm.leaveRoom()
+    this.dialogNotify.onOkClick = () => {
+      this.isErrorHandling = false
+      this.onLeft()
+    }
+    const detail = (err.message != null) 
+      ? "\n" + T.t("Detail","General") + " : " + err.message 
+      : ""
+    this.dialogNotify.showDialog(
+      T.t("Error","General"), 
+      T.t("Communication error.","General") + detail
+    )
+  }
+
+  private onPeerError(err:any) {
+    if (err.type === "authentication") {
+      this.onAuthError()
+    } else if (err.type === "socket-error") {
+      this.onCommunicationError(err)
+    } else {
+      this.onSomeError(err)
+    }
+  }
+
   private makeCommEventHandlers() : MekikuCommEvents {
     const r = new MekikuCommEvents()
-    r.onIdAcquired = (id) => { this.onIdAcquired(id) }
+    r.onPeerIdAcquired = (id) => { this.onPeerIdAcquired(id) }
+    r.onPeerError = (err) => { this.onPeerError(err) }
     r.onJoinedRoom = () => { this.onJoined() }
     r.onLeftRoom = () => { this.onLeft() }
     r.onReceived = (data) => { this.onReceived(data) }
