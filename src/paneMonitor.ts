@@ -4,11 +4,16 @@ import { Pane } from "./pane";
 import { T } from "./t";
 import { Util } from "./util";
 import { UtilDom } from "./utilDom";
-import { MemberType } from "./content";
+import { Content, ContentType, MemberType } from "./content";
 import Log from "./log";
 
 export class PaneMonitor implements Pane {
   getName() { return "PaneMonitor"; }
+
+  setOnNewJoined(callback: (member:MemberInfo) => void) { this.onMemberNewJoined = m => callback(m) }
+  private onMemberNewJoined: (member:MemberInfo) => void = member => {}
+  setOnLeft(callback: (member:MemberInfo) => void) { this.onMemberLeft = m => callback(m) }
+  private onMemberLeft: (member:MemberInfo) => void = member => {}
 
   private members: Array<MemberInfo> = []
   private viewers: Array<MemberInfo> = []
@@ -36,13 +41,16 @@ export class PaneMonitor implements Pane {
     this.updateShortState()
   }
 
-  updateMember(member: MemberInfo) {
+  updateMember(member: MemberInfo, data: Content) {
     if (member.memberType === MemberType.WEB_VIEWER) {
       var ix = this.viewers.findIndex((info) => { return info.id === member.id })
       if (ix < 0) {
         this.viewers.push(member)
         this.updateFooter()
         this.updateShortState()
+        if (ContentType.LOGIN in data) {
+          this.onMemberNewJoined(member)
+        }
       } else {
         const beforeList = this.viewers.splice(ix,1,member)
         if (beforeList.length === 1) {
@@ -58,6 +66,9 @@ export class PaneMonitor implements Pane {
         this.addRow();
         ix = this.members.length - 1;
         this.updateShortState()
+        if (ContentType.LOGIN in data) {
+          this.onMemberNewJoined(member)
+        }
       } else {
         const beforeList = this.members.splice(ix,1,member)
         if (beforeList.length === 1) {
@@ -85,14 +96,20 @@ export class PaneMonitor implements Pane {
   deleteMember(id:string) {
     const ix = this.members.findIndex(info => { return info.id === id })
     if (ix >= 0) {
-      this.members.splice(ix,1)
+      const leftMembers = this.members.splice(ix,1)
       this.removeRow(ix + 1)
+      if (leftMembers.length > 0) {
+        this.onMemberLeft(leftMembers[0])
+      }
     }
 
     const ix2 = this.viewers.findIndex(info => { return info.id === id })
     if (ix2 >= 0) {
-      this.viewers.splice(ix2,1)
+      const leftMembers = this.viewers.splice(ix2,1)
       this.updateFooter()
+      if (leftMembers.length > 0) {
+        this.onMemberLeft(leftMembers[0])
+      }
     }
 
     this.updateShortState()

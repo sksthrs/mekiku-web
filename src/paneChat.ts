@@ -59,6 +59,13 @@ export class PaneChat implements Pane {
     this.beginNotify();
   }
 
+  addSystemMessage(message:string) {
+    const timestamp = (new Date()).toLocaleTimeString()
+    this.logArea.value += message + " (" + timestamp + ")\n";
+    this.logArea.scrollTop = this.logArea.scrollHeight;
+    this.beginNotify();
+  }
+
   hasLog() : boolean {
     return this.logArea.value.length > 0
   }
@@ -133,6 +140,7 @@ export class PaneChat implements Pane {
     this.onSend(
       T.t("Timer started. Next ", "Chat")
       + '[' + this.getRemainingTimeText() + ']'
+      + ' (' + (new Date()).toLocaleTimeString() + ')'
       );
 
     this.countDownTimerId = window.setInterval(() => {
@@ -144,9 +152,15 @@ export class PaneChat implements Pane {
     this.countDown--;
     this.updateTimerNow();
     if (this.countDown === 30) {
-      this.onSend(T.t("30 seconds to next turn.", "Chat"));
+      this.onSend(
+        T.t("30 seconds to next turn.", "Chat")
+        + ' (' + (new Date()).toLocaleTimeString() + ')'
+        );
     } else if (this.countDown === 0) {
-      this.onSend(T.t("It's new turn now.", "Chat"));
+      this.onSend(
+        T.t("It's new turn now.", "Chat")
+        + ' (' + (new Date()).toLocaleTimeString() + ')'
+        );
       const tNow = Number(this.textTimerValue.value);
       if (isNaN(tNow) === false && this.isTimerPeriodValid(tNow)) {
         this.countDownFrom = tNow * 60;
@@ -165,7 +179,10 @@ export class PaneChat implements Pane {
     this.buttonPause.disabled = true;
     this.buttonResetTimer.disabled = false;
 
-    this.onSend(T.t("Timer halted.", "Chat"));
+    this.onSend(
+      T.t("Timer halted.", "Chat")
+      + ' (' + (new Date()).toLocaleTimeString() + ')'
+      );
   }
 
   private resetCountDown() {
