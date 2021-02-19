@@ -210,6 +210,7 @@ export class T {
         "Error occured on file access.\nIf another application is using it, first quit it." : "ファイルへのアクセスでエラーが発生しました。\n他のプログラムでファイルを開いていたら、そちらを終了してください。",
         "Communication error." : "通信エラーです。",
         "Detail" : "詳細",
+        "Internet Explorer and old version of Microsoft Edge are not supported." : "Internet Explorerおよび旧版のMicrosoft Edgeでは利用できません。",
       },
       "Input" : {
         "Input Window" : "入力ウインドウ",
@@ -369,6 +370,7 @@ export class T {
         "Error occured on file access.\nIf another application is using it, first quit it." : "เกิดข้อผิดพลาดในการอ่านไฟล์\nถ้าแอพพลิเคชั่นอื่นกำลังใช้ไฟล์นี้\nให้ปิดไฟล์นี้ก่อน",
         // "Communication error." : "",
         // "Detail" : "",
+        // "Internet Explorer and old version of Microsoft Edge are not supported." : "",
       },
       "Input" : {
         "Input Window" : "หน้าต่างอินพุท",
