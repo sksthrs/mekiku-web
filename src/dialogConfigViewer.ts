@@ -1,19 +1,18 @@
 import { T } from "./t";
 import { AppConfig } from "./appConfig";
 import { UtilDom } from "./utilDom";
-import { Tuple2 } from "./util";
+import { Tuple2, Util } from "./util";
 import Log from "./log";
 
 export class DialogConfigViewer {
   private readonly container = document.getElementById('config-view-container') as HTMLDivElement
   private readonly pane = document.getElementById("config-view") as HTMLDivElement;
-  private readonly GeneralTab = document.getElementById('menu-view-general') as HTMLInputElement
+  private readonly inputFontSize = document.getElementById('config_main_v_font_size') as HTMLInputElement
+  private readonly buttonFontSmaller = document.getElementById('config-view-font-size-down') as HTMLButtonElement
+  private readonly buttonFontLarger = document.getElementById('config-view-font-size-up') as HTMLButtonElement
   private readonly selectLocale = document.getElementById("config-view-select-locale") as HTMLSelectElement;
   private readonly buttonOK = document.getElementById('config-view-button-ok') as HTMLButtonElement
   private readonly buttonCancel = document.getElementById('config-view-button-cancel') as HTMLButtonElement
-  private readonly buttonOpen = document.getElementById('config-view-open') as HTMLButtonElement
-  private readonly buttonSave = document.getElementById('config-view-save') as HTMLButtonElement
-  private readonly buttonReset = document.getElementById('config-view-reset') as HTMLButtonElement
   private locales: Array<Tuple2<string, string>> = [];
 
   private paneNames:Array<string> = [];
@@ -32,6 +31,12 @@ export class DialogConfigViewer {
   constructor() {
     this.setTitle(T.t("Config", "Config"))
     
+    this.buttonFontSmaller.addEventListener('click', ev => {
+      this.inputFontSize.stepDown()
+    })
+    this.buttonFontLarger.addEventListener('click', ev => {
+      this.inputFontSize.stepUp()
+    })
     this.buttonOK.addEventListener('click', ev => {
       this.dialogToConfig()
       this.hideDialog()
@@ -39,16 +44,6 @@ export class DialogConfigViewer {
     })
     this.buttonCancel.addEventListener('click', ev => {
       this.hideDialog()
-    })
-    this.buttonOpen.addEventListener('click', ev => {
-      this.onOpenClicked()
-    })
-    this.buttonSave.addEventListener('click', ev => {
-      this.dialogToConfig()
-      this.onSaveClicked()
-    })
-    this.buttonReset.addEventListener('click', ev => {
-      this.onResetClicked()
     })
   } // end of constructor
 
@@ -64,7 +59,6 @@ export class DialogConfigViewer {
       }
     }
     this.configToDialog();
-    this.GeneralTab.click()
     UtilDom.show(this.container)
   }
 

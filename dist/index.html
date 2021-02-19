@@ -513,79 +513,33 @@
   </div><!-- end of config -->
 
 
+  <!-- ____________________ Config-view ____________________ -->
   <div id="config-view-container" class="dialog">
-    <div id="config-view" class="dialog_content tab_menu">
-      <input id="menu-view-general" type="radio" name="config-section" checked>
-      <label for="menu-view-general" class="tab_item"><span id="menu-view-general-text" class="l10n" data-context="Config|Misc">General</span></label>
-      <input id="menu-view-main" type="radio" name="config-section">
-      <label for="menu-view-main" class="tab_item"><span id="menu-view-main-text" class="l10n" data-context="Config|Main">Main Display</span></label>
-
-      <!-- ____________________ Config-view : General ____________________ -->
-      <div id="config-view-about-general" class="tab_content">
-      
-        <h2 id="config-view-general">
-          <span id="config-view-general-text" class="l10n" data-context="Config|Misc">General</span>
-        </h2>
-      
-        <div class="config-singleline">
-          <select id="config-view-select-locale" name="config-locale">
-          </select>
-        </div>
-
-        <div class="config-singleline">
-          <button id="config-view-open" class="l10n" data-context="Menu|Menu">Open Settings...</button>
-        </div>
-
-        <div class="config-singleline">
-          <button id="config-view-save" class="l10n" data-context="Menu|Menu">Save Settings As...</button>
-        </div>
-
-        <div class="config-singleline">
-          <button id="config-view-reset" class="l10n" data-context="Menu|Menu">Reset All Settings</button>
-        </div>
+    <div id="config-view" class="dialog_content">
+      <div class="config-singleline">
+        <span id="config-view-main-font-size-text" class="config-key l10n" data-context="Config|General">Font Size</span>
+        <button id="config-view-font-size-down" class="shortbutton">-</button>
+        <input id="config_main_v_font_size" class="w4" type="number" min="6" max="128" step="1" required>
+        <button id="config-view-font-size-up" class="shortbutton">+</button>
       </div>
-      
-      <!-- ____________________ Config-view : Main Display pane ____________________ -->
-      <div id="config-view-about-main" class="tab_content">
-      
-        <h2 id="config-view-main">
-          <span id="config-view-main-text" class="l10n" data-context="Config|Main">Main Display</span>
-        </h2>
-      
-        <div class="config-singleline">
-          <span id="config-view-main-font-size-text" class="config-key l10n" data-context="Config|General">Font Size</span>
-          <input id="config_main_v_font_size" class="w4" type="number" min="6" max="128" required>
-        </div>
-        <div class="config-singleline">
-          <span id="config-view-main-font-familyName-text" class="config-key l10n" data-context="Config|General">Font Name</span>
-          <input id="config_main_v_font_familyName" class="w16" type="text">
-        </div>
-        <div class="config-singleline">
-          <span id="config-view-main-textcolor-text" class="config-key l10n" data-context="Config|General">Font Color</span>
-          <input id="config_main_v_foreColor" type="color">
-        </div>
-        <div class="config-singleline">
-          <label>
-            <span id="config-view-main-is-bold-text" class="config-key l10n" data-context="Config|General">Bold</span>
-            <input id="config_main_v_font_isBold" type="checkbox">
-          </label>
-        </div>
-        <div class="config-singleline">
-          <span id="config-view-main-backcolor-text" class="config-key l10n" data-context="Config|General">Background Color</span>
-          <input id="config_main_v_backColor" type="color">
-        </div>
-        <div class="config-singleline">
-          <span id="config-view-main-line-height-text" class="config-key l10n" data-context="Config|Main">Line Height</span>
-          <input id="config_main_v_lineHeight" class="w5" type="number" min="100" max="200" step="5" required>
-        </div>
-        <div class="config-singleline">
-          <span id="config-view-main-scroll-time-text" class="config-key l10n" data-context="Config|Main">Scroll interval per line</span>
-          <input id="config_main_v_scrollMsec" class="w5" type="number" min="50" max="2000" step="50" required step="50">
-          <span id="config-view-main-scroll-time-unit" class="l10n" data-context="Config|Main">msec</span>
-        </div>
-      
+      <div class="config-singleline">
+        <label>
+          <span id="config-view-main-is-bold-text" class="config-key l10n" data-context="Config|General">Bold</span>
+          <input id="config_main_v_font_isBold" type="checkbox">
+        </label>
       </div>
-      
+      <div class="config-singleline">
+        <span id="config-view-main-textcolor-text" class="config-key l10n" data-context="Config|General">Font Color</span>
+        <input id="config_main_v_foreColor" type="color">
+      </div>
+      <div class="config-singleline">
+        <span id="config-view-main-backcolor-text" class="config-key l10n" data-context="Config|General">Background Color</span>
+        <input id="config_main_v_backColor" type="color">
+      </div>
+      <div class="config-singleline">
+        <select id="config-view-select-locale" name="config-locale">
+        </select>
+      </div>
     </div>
     <div id="config-view-button-pane">
       <button id="config-view-button-ok" class="l10n submit" data-context="General">OK</button>
