@@ -161,6 +161,12 @@ tr.single_column {
 	background-color: #CFC;
 }
 
+/* ==================== to settle styles on iOS ==================== */
+
+input[type="button"] {
+  -webkit-appearance: none;
+}
+
 /* ==================== App-specific Elements ==================== */
 
 #shutter {
