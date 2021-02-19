@@ -215,7 +215,11 @@ export class PaneChat implements Pane {
 
   private resetCountDown() {
     this.countDownFrom = AppConfig.data.chat_timer * 60;
-    this.countDown = this.countDownFrom;
+    this.textTimerValue.value = AppConfig.data.chat_timer.toString()
+    // Reset timer itself only if timer is halt.
+    if (this.countDownTimerId < 0) {
+      this.countDown = this.countDownFrom;
+    }
     this.updateTimerNow();
   }
 
