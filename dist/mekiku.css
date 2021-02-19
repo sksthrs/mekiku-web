@@ -564,6 +564,39 @@ div#pft-panes {
   text-align: center;
 }
 
+/* notify dialog */
+#notify-content {
+  min-width: 50%;
+  max-width: 90%;
+}
+#notify-title {
+  padding: 4px;
+  color: black;
+  background-color: #eeeeee;
+  font-weight: bold;
+  line-height: 100%;
+  border: 1px solid #c0c0c0;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  white-space: pre-line;
+}
+#notify-message {
+  padding: 0.5em 1em;
+  color: black;
+  background-color: white;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  white-space: pre-line;
+}
+#notify-buttons {
+  text-align: center;
+  margin-top: 0.5em;
+}
+#notify-ok-button {
+  font-family: inherit;
+  font-size: 100%;
+}
+
 /* login dialog */
 #login input {
   font-family: inherit;
