@@ -1,3 +1,6 @@
+import { AppConfig } from "./appConfig"
+import { DetectEncoding } from "./detectEncoding"
+
 export class Downloader {
   private static readonly dlLink = document.getElementById('file-download') as HTMLAnchorElement
 
@@ -13,7 +16,7 @@ export class Downloader {
 class FileController {
   onAbort: (ev:ProgressEvent<FileReader>, file:File) => void = (e,f) => {}
   onError: (ev:ProgressEvent<FileReader>, file:File) => void = (e,f) => {}
-  onLoad: (ev:ProgressEvent<FileReader>, file:File) => void = (e,f) => {}
+  onLoad: (ev:ProgressEvent<FileReader>, file:File, text:string) => void = (e,f,t) => {}
   private readonly opener:HTMLInputElement
 
   constructor(idOpener:string) {
@@ -25,8 +28,18 @@ class FileController {
         const file = this.opener.files[0]
         reader.onabort = ev => { this.onAbort(ev,file) }
         reader.onerror = ev => { this.onError(ev,file) }
-        reader.onload = ev => { this.onLoad(ev,file) }
-        reader.readAsText(file)
+        reader.onload = ev => {
+          const buf = ev.target?.result
+          if (buf instanceof ArrayBuffer) {
+            let encoding = DetectEncoding.detect(buf)
+            if (encoding.length < 1) { encoding = AppConfig.data.pft_fallbackEncoding }
+            const decoder = new TextDecoder(encoding)
+            const text = decoder.decode(buf)
+            this.onLoad(ev,file,text)
+          }
+        }
+        // reader.readAsText(file)
+        reader.readAsArrayBuffer(file)
       }
     }
   }

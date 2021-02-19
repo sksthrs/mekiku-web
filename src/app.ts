@@ -401,9 +401,8 @@ class App {
       })
       this.dialogInput.showDialog(label,name)
     })
-    this.pftFileController.onLoad = (ev,file) => {
+    this.pftFileController.onLoad = (ev,file,text) => {
       if (ev.target?.result == null) return
-      const text = ev.target.result as string // this must be string
       this.panePft.NotifyPftOpened(text,file)
     }
     this.pftFileController.onError = (ev,file) => {
