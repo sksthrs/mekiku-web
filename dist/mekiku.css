@@ -127,6 +127,11 @@ tr.single_column {
   text-align: center;
 }
 
+/* avoid iPhone from zoom-up (16px/12pt or bigger) */
+.big_font {
+  font-size: 14pt;
+}
+
 /* ==================== Button-style radio-switch ==================== */
 
 .radio_choice {
@@ -642,6 +647,7 @@ div#pft-panes {
 /* login dialog */
 #login input {
   font-family: inherit;
+  font-size   : 100%;
 }
 #login input[type="text"] {
   width: 100%;
@@ -669,13 +675,10 @@ div#pft-panes {
 #config-container , #config-view-container {
   background-color: rgba(0, 0, 0, 0.5);
   color: black;
-  overflow: scroll;
+  overflow: auto;
 }
 #config-container {
   font-size: 14px;
-}
-#config-view-container {
-  font-size: 20px;
 }
 #config , #config-view {
   min-width: 50%;
