@@ -3,6 +3,7 @@
 import Log from "./log"
 import {Content, ContentClass, ContentToSend, MemberType, ContentToSendClass} from './content'
 import LoginInfo from "./loginInfo"
+import { Util } from "./util"
 
 export class MekikuCommEvents {
   /** called when Peer-ID confirmed */
@@ -117,6 +118,10 @@ class MekikuComm {
     Log.w('Info',`joining room room:${info.room}, name:${info.name}, type:${info.memberType}, pass:${info.pass}, mode:${mode}`)
     if (this.peer == null) {
       Log.w('Error','peer is null.')
+      return false
+    }
+    if (!Util.isRoomNameLegit(info.room)) {
+      Log.w('Error', `Illegal room name:[${info.room}]`)
       return false
     }
 

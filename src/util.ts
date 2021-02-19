@@ -1,5 +1,30 @@
 export class Util {
   /**
+   * Extract string 'before delimiter' or whole if delimiter is not included.
+   * 
+   * beforeOf('abc/def', '/') === 'abc'
+   * beforeOf('abc/def', ':') === 'abc/def'
+   * beforeOf('abc/def', 'a') === ''
+   * 
+   * @param src source string
+   * @param delimiter delimiter string
+   */
+  static beforeOf(src:string, delimiter:string) : string {
+    const ix = src.indexOf(delimiter)
+    if (ix<0) return src
+    return src.substring(0,ix)
+  }
+
+  /**
+   * Check if a string is legit for room-name.
+   * @param name room name candidate
+   */
+  static isRoomNameLegit(name:string) : boolean {
+    const re = /^[A-Za-z0-9_-]+$/
+    return re.test(name)
+  }
+
+  /**
    * Check if a string contains one of substrings
    * @param text string which is checked if contains one of substrings
    * @param substrings string(s) which might be contained in text
