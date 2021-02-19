@@ -306,6 +306,7 @@ class App {
       )
       this.updateRoomName(info.room)
       // 'pass' is not used because no password
+      this.paneMonitor.clearMembers()
       if (info.memberType === MemberType.WEB_VIEWER) {
         this.setViewerStyle()
       } else {
@@ -609,6 +610,7 @@ class App {
     this.dialogLogin.setRoom(this.roomName)
     this.dialogLogin.setName(TmpConfig.getName())
     this.updateRoomName('')
+    this.paneMonitor.clearMembers()
     const isSubtitler = TmpConfig.getMemberType() === MemberType.WEB_SUBTITLER
     const hasMain = this.paneMain.hasMainLog() && isSubtitler
     const hasChat = this.paneChat.hasLog() && isSubtitler
