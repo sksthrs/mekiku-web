@@ -255,10 +255,6 @@ class App {
     }
 
     this.dialogLogin.onLoginClick = info => {
-      if (info.name === "error") {
-        this.onPeerError({type:"authentication", message:"wrong password!"})
-        return
-      }
       this.loginInfo = info
       if (info.room.length < 1) {
         info.room = location.hash
@@ -288,14 +284,6 @@ class App {
       this.comm.queue_room(ContentUtil.makeMonitorData(text))
     })
     this.paneInput.setDoOnEnter((text) => {
-      if (text === "error1") {
-        this.onPeerError({type:"socket-error", message:"test message"})
-        return
-      }
-      if (text === "error2") {
-        this.onPeerError({type:"signaling-limited", message:"you have to pay!"})
-        return
-      }
       this.sendMain(text)
     })
     this.paneInput.setDoOnUndo(() => {
