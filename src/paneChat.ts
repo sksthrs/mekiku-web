@@ -4,6 +4,7 @@ import { Util } from "./util";
 import { T } from "./t";
 import { UtilDom } from "./utilDom";
 import { ChatSystemType } from "./content";
+import Log from "./log";
 
 export class PaneChat implements Pane {
   getName() { return "PaneChat"; }
@@ -28,6 +29,7 @@ export class PaneChat implements Pane {
   private readonly T_COUNTDOWN = 1000;
   private notifyTimerId: number = -1;
   private readonly T_NOTIFY = 500;
+  private readonly T_PRECAUTION = 30 // [sec]
 
   private isOnShow:boolean = false;
 
@@ -62,13 +64,13 @@ export class PaneChat implements Pane {
     this.beginNotify();
   }
 
-  addChatSystemMessage(sender:string, messageType:number) {
+  addChatSystemMessage(sender:string, messageType:number, messageArg:string) {
     let message = ""
     if (messageType === ChatSystemType.NOW) {
       message = this.makeTimerNextTurnMessage()
       if (AppConfig.data.chat_useSound) { this.audioNextTuen.play() }
     } else if (messageType === ChatSystemType.START) {
-      message = this.makeTimerStartMessage()
+      message = this.makeTimerStartMessage(messageArg)
     } else if (messageType === ChatSystemType.PRECAUTION) {
       message = this.makeTimerPrecautionMessage()
       if (AppConfig.data.chat_useSound) { this.audioPrecaution.play() }
@@ -98,8 +100,10 @@ export class PaneChat implements Pane {
   private doOnSend: (message:string) => void = (m) => {};
   private onSend(message:string) { this.doOnSend(message); }
 
-  setOnSendSystem(callback: (type:number) => void) { this.doOnSendSystem = t => callback(t) }
-  private doOnSendSystem: (type:number) => void = t => {}
+  setOnSendSystem(callback: (type:number, arg:string) => void) { 
+    this.doOnSendSystem = (t,a) => callback(t,a) 
+  }
+  private doOnSendSystem: (type:number,arg:string) => void = (t,a) => {}
 
   private getFkey: (ix:number) => string = (ix) => { return ""; }
   setGetFkey(callback: (ix:number) => string) { this.getFkey = (ix) => callback(ix); }
@@ -161,15 +165,16 @@ export class PaneChat implements Pane {
     this.buttonPause.disabled = false;
     this.buttonResetTimer.disabled = true;
 
-    this.doOnSendSystem(ChatSystemType.START)
+    this.doOnSendSystem(ChatSystemType.START, this.getRemainingTimeText())
     this.countDownTimerId = window.setInterval(() => {
       this.onCount();
     }, this.T_COUNTDOWN);
   }
 
-  private makeTimerStartMessage() : string {
+  private makeTimerStartMessage(currentCount:string) : string {
     return T.t("Timer started. Next ", "Chat")
-    + '[' + this.getRemainingTimeText() + ']'
+    + '[' + currentCount + ']'
+    + ' (' + (new Date()).toLocaleTimeString() + ')'
   }
 
   private makeTimerPrecautionMessage() : string {
@@ -185,10 +190,10 @@ export class PaneChat implements Pane {
   private onCount() {
     this.countDown--;
     this.updateTimerNow();
-    if (this.countDown === 30) {
-      this.doOnSendSystem(ChatSystemType.PRECAUTION)
+    if (this.countDown === this.T_PRECAUTION) {
+      this.doOnSendSystem(ChatSystemType.PRECAUTION, String(this.T_PRECAUTION))
     } else if (this.countDown === 0) {
-      this.doOnSendSystem(ChatSystemType.NOW)
+      this.doOnSendSystem(ChatSystemType.NOW, '0')
       const tNow = Number(this.textTimerValue.value);
       if (isNaN(tNow) === false && this.isTimerPeriodValid(tNow)) {
         this.countDownFrom = tNow * 60;

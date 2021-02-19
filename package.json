@@ -1,6 +1,6 @@
 {
   "name": "mekiku-web",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "subtitling on the web",
   "main": "index.js",
   "scripts": {

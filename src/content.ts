@@ -129,14 +129,16 @@ export class ContentUtil {
     return false
   }
   
-  static makeChatSystemData(type:number) : ContentDataChatSystem {
+  static makeChatSystemData(type:number, arg:string) : ContentDataChatSystem {
     return {
-      "C_TYPE" : type
+      "C_TYPE" : type,
+      "C_ARG" : arg,
     }
   }
   static hasChatSystemData(d:any) : d is ContentDataChatSystem {
     if (!d) return false
     if (d.C_TYPE != null && typeof d.C_TYPE === 'number') return true
+    if (d.C_ARG != null && typeof d.C_ARG === 'string') return true
     return false
   }
 
@@ -219,7 +221,8 @@ export interface ContentDataChat {
   C : string
 }
 export interface ContentDataChatSystem {
-  C_TYPE : number
+  C_TYPE : number,
+  C_ARG : string
 }
 export interface ContentDataMonitor {
   M : string
