@@ -342,7 +342,7 @@ class App {
       if (member.memberType === MemberType.WEB_SUBTITLER) {
         this.paneChat.addSystemMessage(`(${T.t('login','Chat')} : ${member.name})`)
       } else {
-        this.paneChat.addSystemMessage(`(${T.t('New viewer joined.','Chat')})`)
+        this.paneChat.addSystemMessage(`(${T.t('New viewer','Chat')} : ${member.name})`)
       }
     })
 
@@ -350,7 +350,7 @@ class App {
       if (member.memberType === MemberType.WEB_SUBTITLER) {
         this.paneChat.addSystemMessage(`(${T.t('logout','Chat')} : ${member.name})`)
       } else {
-        this.paneChat.addSystemMessage(`(${T.t('A viewer left.','Chat')})`)
+        this.paneChat.addSystemMessage(`(${T.t('A viewer left','Chat')} : ${member.name})`)
       }
     })
   }

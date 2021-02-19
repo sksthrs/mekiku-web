@@ -229,9 +229,9 @@ export class T {
         "Timer started. Next " : "タイマーを開始しました。通知間隔 ",
         "Timer halted." : "タイマーを停止しました。",
         "login" : "新規ログイン", // real message : "(login : NAME_OF_MEMBER)"
-        "New viewer joined." : "閲覧者がログイン",
+        "New viewer" : "閲覧者がログイン",
         "logout" : "ログアウト", // real message : "(logout : NAME_OF_MEMBER)"
-        "A viewer left." : "閲覧者が退室",
+        "A viewer left" : "閲覧者が退室",
       },
       "Monitor" : {
         "Input Monitor" : "入力モニター",

@@ -63,12 +63,6 @@ class DialogLogin {
   }
 
   private updateState() {
-    if (this.subtitlerRadio.checked) {
-      this.showName()
-    } else {
-      this.hideName()
-    }
-    
     // if all inputs are hidden, always login-able.
     if (UtilDom.isDisplayed(this.roomRow) === false 
       && UtilDom.isDisplayed(this.nameRow) === false 

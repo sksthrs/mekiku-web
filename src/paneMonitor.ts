@@ -85,7 +85,9 @@ export class PaneMonitor implements Pane {
   }
 
   private updateFooter() {
-    this.footer.textContent = `${T.t("Number of Viewers","General")} : ${this.viewers.length}`
+    const delimiter = this.viewers.length>0 ? ': ' : ''
+    const names = this.viewers.map(v => v.name ?? '?').join(' ')
+    this.footer.textContent = `${T.t("Viewer","General")}(${this.viewers.length})${delimiter}${names}`
   }
 
   private updateShortState() {
