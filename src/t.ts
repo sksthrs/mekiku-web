@@ -233,6 +233,7 @@ export class T {
         "New viewer" : "閲覧者がログイン",
         "logout" : "ログアウト", // real message : "(logout : NAME_OF_MEMBER)"
         "A viewer left" : "閲覧者が退室",
+        "memo" : "メモ",
       },
       "Monitor" : {
         "Input Monitor" : "入力モニター",
@@ -400,6 +401,7 @@ export class T {
         // "New viewer" : "",
         // "logout" : "", // real message : "(logout : NAME_OF_MEMBER)"
         // "A viewer left" : "",
+        // "memo" : "",
       },
       "Monitor" : {
         "Input Monitor" : "มอนิเตอร์อินพุท",

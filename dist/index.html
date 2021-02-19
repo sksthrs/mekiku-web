@@ -70,6 +70,10 @@
           <input id="chat-timer-value" type="text" autocomplete="off" maxlength="2" value="5">
           <button id="chat-timer-down" class="inlineButton"><span id="chat-timer-down-icon" class="lsf title-l10n" title="Decrease Timer By A Minute" data-context="Chat">down</span></button>
         </div>
+        <div id="chat-memo-container">
+          <span id="chat-memo-label" class="l10n" data-context="Chat">memo</span>
+          <input id="chat-memo" type="text" autocomplete="off">
+        </div>
         <textarea id="chat-log" class="wrap" readonly></textarea>
         <input id="chat-input" type="text" autocomplete="off">
       </div>
@@ -77,13 +81,13 @@
       <div id="fkey" class="pane">
         <div id="fkey-title" class="titlebar">Shortcut</div>
         <table id="fkey-table">
-          <tr><td class="fkey-label" id="fkey01-label">F1</td><td class="fkey-text"><input type="text" id="fkey01" class="fkey-input"></td></tr>
-          <tr><td class="fkey-label" id="fkey02-label">F2</td><td class="fkey-text"><input type="text" id="fkey02" class="fkey-input"></td></tr>
-          <tr><td class="fkey-label" id="fkey03-label">F3</td><td class="fkey-text"><input type="text" id="fkey03" class="fkey-input"></td></tr>
-          <tr><td class="fkey-label" id="fkey04-label">F4</td><td class="fkey-text"><input type="text" id="fkey04" class="fkey-input"></td></tr>
-          <tr><td class="fkey-label" id="fkey05-label">F5</td><td class="fkey-text"><input type="text" id="fkey05" class="fkey-input"></td></tr>
-          <tr><td class="fkey-label" id="fkey06-label">F6</td><td class="fkey-text"><input type="text" id="fkey06" class="fkey-input"></td></tr>
-          <tr><td class="fkey-label" id="fkey07-label">F7</td><td class="fkey-text"><input type="text" id="fkey07" class="fkey-input"></td></tr>
+          <tr><td class="fkey-label" id="fkey01-label">F1</td><td class="fkey-text"><input type="text" id="fkey01" class="fkey-input" autocomplete="off"></td></tr>
+          <tr><td class="fkey-label" id="fkey02-label">F2</td><td class="fkey-text"><input type="text" id="fkey02" class="fkey-input" autocomplete="off"></td></tr>
+          <tr><td class="fkey-label" id="fkey03-label">F3</td><td class="fkey-text"><input type="text" id="fkey03" class="fkey-input" autocomplete="off"></td></tr>
+          <tr><td class="fkey-label" id="fkey04-label">F4</td><td class="fkey-text"><input type="text" id="fkey04" class="fkey-input" autocomplete="off"></td></tr>
+          <tr><td class="fkey-label" id="fkey05-label">F5</td><td class="fkey-text"><input type="text" id="fkey05" class="fkey-input" autocomplete="off"></td></tr>
+          <tr><td class="fkey-label" id="fkey06-label">F6</td><td class="fkey-text"><input type="text" id="fkey06" class="fkey-input" autocomplete="off"></td></tr>
+          <tr><td class="fkey-label" id="fkey07-label">F7</td><td class="fkey-text"><input type="text" id="fkey07" class="fkey-input" autocomplete="off"></td></tr>
           <tr><td class="fkey-label" id="fkey08-label">F8</td><td class="fkey-text"><div id="cfkey08" class="fkey-text-readonly l10n" data-context="Fkey">Parenthesize all</div></td></tr>
           <tr><td class="fkey-label" id="fkey09-label">F9</td><td class="fkey-text"><div id="cfkey09" class="fkey-text-readonly l10n" data-context="Fkey">Undo</div></td></tr>
         </table>

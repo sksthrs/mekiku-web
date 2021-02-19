@@ -20,6 +20,8 @@ export class PaneChat implements Pane {
   private buttonUp = document.getElementById("chat-timer-up") as HTMLButtonElement;
   private buttonDown = document.getElementById("chat-timer-down") as HTMLButtonElement;
   private textTimerValue = document.getElementById("chat-timer-value") as HTMLInputElement;
+  private memoText = document.getElementById("chat-memo") as HTMLInputElement
+  private memoLabel = document.getElementById("chat-memo-label") as HTMLSpanElement
   private audioNextTuen = document.getElementById("audio-nextturn") as HTMLAudioElement
   private audioPrecaution = document.getElementById("audio-precaution") as HTMLAudioElement;
 
@@ -288,6 +290,17 @@ export class PaneChat implements Pane {
     this.logArea.style.fontWeight = AppConfig.data.chat_font_isBold ? "bold" : "normal";
     this.logArea.style.color = AppConfig.data.chat_foreColor;
     this.logArea.style.backgroundColor = AppConfig.data.chat_backColor;
+
+    this.memoText.style.fontFamily = UtilDom.makeFontFamily(AppConfig.data.chat_font_familyName);
+    this.memoText.style.fontSize = AppConfig.data.chat_font_size + "pt";
+    this.memoText.style.fontWeight = AppConfig.data.chat_font_isBold ? "bold" : "normal";
+    this.memoText.style.color = AppConfig.data.chat_foreColor;
+    this.memoText.style.backgroundColor = AppConfig.data.chat_backColor;
+
+    this.memoLabel.style.fontFamily = UtilDom.makeFontFamily(AppConfig.data.chat_font_familyName);
+    this.memoLabel.style.fontSize = (AppConfig.data.chat_font_size * 7/10) + "pt";
+    this.memoLabel.style.color = AppConfig.data.chat_foreColor;
+    this.memoLabel.style.backgroundColor = AppConfig.data.chat_backColor;
 
     this.inputArea.style.fontFamily = UtilDom.makeFontFamily(AppConfig.data.chat_font_familyName);
     this.inputArea.style.fontSize = AppConfig.data.chat_font_size + "pt";

@@ -408,6 +408,23 @@ div#chat {
   vertical-align: middle;
   width: 2em;
 }
+#chat-memo-container {
+  border-left: 1px solid #c5c5c5;
+  border-right: 1px solid #c5c5c5;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+#chat-memo-label {
+  flex-grow: 0;
+  flex-shrink: 0;
+  padding-right: 2px;
+}
+#chat-memo {
+  flex-grow: 1;
+  flex-shrink: 1;
+  border: 0;
+}
 #chat-log {
   border: 1px solid #c5c5c5;
   flex-grow: 1;
@@ -446,7 +463,7 @@ table#fkey-table {
 }
 .fkey-input {
   width: 100%;
-  border: 1px solid black;
+  border: 1px solid #808080;
   padding: 1px 2px 0.2em 2px; /* bottom for IME-underline */
 }
 td.fkey-text {
