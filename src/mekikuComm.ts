@@ -90,7 +90,7 @@ class MekikuComm {
    */
   open(key: string, option?:MekikuCommOpenOption) {
     if (this.peer?.open === true) {
-      Log.w('Info',`comm.open : old peer(id=${this.peer.id}) remains. disconnecting...`)
+      // Log.w('Info',`comm.open : old peer(id=${this.peer.id}) remains. disconnecting...`)
       this.peer.disconnect()
     }
     this.openOption = { ...new MekikuCommOpenOptionClass(), ...option }
@@ -112,31 +112,39 @@ class MekikuComm {
    * Join room.
    * @param room_name name of room to join
    * @param mode connecting mode. "sfu" or "mesh" is available.
-   * @returns success(true) or fail(false)
+   * @returns Promise
    */
-  joinRoom(info:LoginInfo, mode="sfu") {
-    Log.w('Info',`joining room room:${info.room}, name:${info.name}, type:${info.memberType}, pass:${info.pass}, mode:${mode}`)
+  async joinRoom(info:LoginInfo, mode="sfu") : Promise<void> {
     if (this.peer == null) {
       Log.w('Error','peer is null.')
-      return false
+      throw new Error('peer is null')
     }
     if (!Util.isRoomNameLegit(info.room)) {
       Log.w('Error', `Illegal room name:[${info.room}]`)
-      return false
+      throw new Error('Illegal room name')
     }
 
-    const r = this.peer.joinRoom(info.room, {
+    var roomName = await this.makeRoomName(info.room, info.pass)
+    const r = this.peer.joinRoom(roomName, {
       mode: mode
     })
     if (r == null) {
       Log.w('Error','joinRoom failed.')
-      return false
+      throw new Error('joinRoom failed.')
     }
     this.info = LoginInfo.clone(info)
 
     this.room = r
     this.setRoomEvents(this.room)
-    return true
+    return
+  }
+
+  private async makeRoomName(room:string, pass:string) : Promise<string> {
+    if (pass === '') {
+      return room
+    }
+    const digest = await Util.digestMessage(pass)
+    return room + '*' + digest
   }
 
   /**

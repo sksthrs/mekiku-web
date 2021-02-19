@@ -92,11 +92,6 @@ class DialogLogin {
         canLogin = false
       }
     }
-    if (UtilDom.isDisplayed(this.passRow)) {
-      if (this.passInput.value.length < 1) {
-        canLogin = false
-      }
-    }
 
     if (this.loginCondition < 1) {
       canLogin = false

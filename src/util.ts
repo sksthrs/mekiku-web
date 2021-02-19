@@ -218,6 +218,19 @@ export class Util {
     return `${y}-${m}-${d}`
   }
 
+  /**
+   * make message digest and returns hex-ed string
+   * https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest
+   * @param message string to make digest
+   */
+  static async digestMessage(message:string) : Promise<string> {
+    const msgUint8 = new TextEncoder().encode(message)
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8)
+    const hashArray = Array.from(new Uint8Array(hashBuffer))
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
+    return hashHex
+  }
+
   // Only for static-calling. Don't "new".
   private constructor() {}
 }

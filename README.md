@@ -9,6 +9,18 @@ https://sksthrs.github.io/mekiku-web/dist/
 
 - iPhoneのブラウザ上では、動作に異常があります。将来的には修正する予定です。 (On iPhone, not works properly. This will be fixed.)
 
+## 設定について (Configuration)
+
+`dist/config.json`
+
+```json
+{
+  "api_key" : "your SkyWay API KEY",
+  "debug_level" : 2, // NONE:0, ERROR:1, WARN:2, FULL:3
+  "auth_url" : "browser" // no-password:"" , browser-only:"browser"
+}
+```
+
 ## 注意点 (Notice)
 
 IEおよび古いMicrosoft Edgeでは動作しません。将来的にも対応はしません。なお、新しいEdge（Chromium版、アイコンが緑〜青のグラデーションのもの）では動作します。
