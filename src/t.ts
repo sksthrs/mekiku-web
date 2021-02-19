@@ -277,6 +277,7 @@ export class T {
         "Room" : "ルーム",
         "Viewer" : "利用者・閲覧者",
         "Subtitler" : "入力者（要約筆記者）",
+        "Password" : "パスワード",
         "Login failed." : "ログインに失敗しました。",
       },
       "Config" : {
@@ -441,6 +442,7 @@ export class T {
         // "Room" : "",
         // "Viewer" : "",
         // "Subtitler" : "",
+        // "Password" : "",
         // "Login failed." : "",
       },
       "Config" : {
