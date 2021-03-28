@@ -113,7 +113,7 @@ class App {
     }
 
     // fetch config.json
-    fetch("config.json")
+    fetch( "config.json?" + Date.now().toString() )
     .then(response => {
       return response.json()
     })
