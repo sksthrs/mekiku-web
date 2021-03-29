@@ -96,7 +96,7 @@ class App {
     this.setLoginDialogEvents()
     this.dialogLogin.hidePass() // no password
     this.dialogLogin.setName(TmpConfig.getName())
-    const roomNameRaw = Util.beforeOf(UtilDom.getQuery() , '/')
+    const roomNameRaw = Util.extractPossibleRoomName(UtilDom.getQuery())
     if (Util.isRoomNameLegit(roomNameRaw)) {
       this.dialogLogin.setRoom(roomNameRaw)
       this.dialogLogin.hideRoom()

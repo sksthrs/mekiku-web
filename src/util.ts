@@ -25,6 +25,28 @@ export class Util {
   }
 
   /**
+   * Extract possible room-name (last key in query string) from query-string
+   * @param src source string (assumed as query-string without first '?')
+   * @returns possible room-name or ''
+   */
+  static extractPossibleRoomName(src:string) : string {
+    const keyValuePairs = Util.queryString2kvArray(src)
+    const lastPair = keyValuePairs[keyValuePairs.length - 1]
+    return lastPair.key
+  }
+
+  static queryString2kvArray(queryString:string) : Array<KeyValuePair<string,string>> {
+    const result = Array<KeyValuePair<string,string>>()
+    queryString.split('&').map(token => {
+      const kv = token.split('=')
+      const k = kv[0]
+      const v = (kv.length > 1) ? kv[1] : ''
+      result.push({key:k, value:v})
+    })
+    return result
+  }
+
+  /**
    * Check if a string contains one of substrings
    * @param text string which is checked if contains one of substrings
    * @param substrings string(s) which might be contained in text
@@ -256,4 +278,9 @@ export class Util {
 export interface Tuple2<T1,T2> {
   v1: T1;
   v2: T2;
+}
+
+export interface KeyValuePair<T,U> {
+  key: T
+  value: U
 }
