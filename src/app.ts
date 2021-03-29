@@ -121,7 +121,7 @@ class App {
       if ("api_key" in json) {
         const apikey = json.api_key as string
         TmpConfig.setApiKey(apikey)
-        this.dialogLogin.setLoginCondition(1)
+        this.dialogLogin.enableLogin()
       }
       if ("debug_level" in json) {
         const debuglevel = json.debug_level as number

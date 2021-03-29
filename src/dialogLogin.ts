@@ -18,10 +18,13 @@ class DialogLogin {
   private buttonDownloadChat = document.getElementById('loginDialog_chat_log_download') as HTMLButtonElement
 
   /** Condition for login (set from outside) */
-  private loginCondition: number = 0
-  /** Set value for login (set from outside) */
-  setLoginCondition(cond:number) {
-    this.loginCondition = cond
+  private loginCondition: boolean = false
+  enableLogin() {
+    this.loginCondition = true
+    this.updateState()
+  }
+  disableLogin() {
+    this.loginCondition = false
     this.updateState()
   }
 
@@ -87,7 +90,7 @@ class DialogLogin {
       }
     }
 
-    if (this.loginCondition < 1) {
+    if (this.loginCondition !== true) {
       canLogin = false
     }
 
