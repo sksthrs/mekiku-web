@@ -123,15 +123,30 @@ class App {
         TmpConfig.setApiKey(apikey)
         this.dialogLogin.enableLogin()
       }
+
       if ("debug_level" in json) {
         const debuglevel = json.debug_level as number
         TmpConfig.setDebugLevel(debuglevel)
       }
+
       if ("auth_url" in json) {
         const authurl = json.auth_url as string
         TmpConfig.setAuthUrl(authurl)
         if (authurl.length > 0) {
           this.dialogLogin.showPass()
+        }
+      }
+
+      this.dialogLogin.clearRole()
+      if ("subtitler_url_value" in json) {
+        const url_value = json.subtitler_url_value as string
+        if (url_value != null && url_value !== '') {
+          const queries = Util.queryString2kvArray(UtilDom.getQuery())
+          if ('u' in queries && queries['u'] === url_value) {
+            this.dialogLogin.fixRoleAsSubtitler()
+          } else {
+            this.dialogLogin.fixRoleAsViewer()
+          }
         }
       }
     })

@@ -7,7 +7,9 @@ class DialogLogin {
   private roomRow = document.getElementById('loginTable_roomRow') as HTMLTableRowElement
   private nameRow = document.getElementById('loginTable_nameRow') as HTMLTableRowElement
   private passRow = document.getElementById('loginTable_passRow') as HTMLTableRowElement
+  private viewerChoice = document.getElementById('loginTable_role0') as HTMLSpanElement
   private viewerRadio = document.getElementById('role0') as HTMLInputElement
+  private subtitlerChoice = document.getElementById('loginTable_role1') as HTMLSpanElement
   private subtitlerRadio = document.getElementById('role1') as HTMLInputElement
   private roomInput = document.getElementById('login-input-room') as HTMLInputElement
   private nameInput = document.getElementById('login-input-name') as HTMLInputElement
@@ -146,6 +148,21 @@ class DialogLogin {
   showRoom() {
     this.roomInput.required = true
     UtilDom.displayOn(this.roomRow, "table-row")
+  }
+
+  fixRoleAsViewer() {
+    this.viewerRadio.checked = true
+    UtilDom.displayOff(this.subtitlerChoice)
+  }
+
+  fixRoleAsSubtitler() {
+    this.subtitlerRadio.checked = true
+    UtilDom.displayOff(this.viewerChoice)
+  }
+
+  clearRole() {
+    UtilDom.displayOn(this.viewerChoice, "inline-block")
+    UtilDom.displayOn(this.subtitlerChoice, "inline-block")
   }
 
   hideRoom() {
