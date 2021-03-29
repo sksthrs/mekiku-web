@@ -1,4 +1,26 @@
 class TmpConfig {
+  // initial URL (URL might be overwritten)
+  private static initialLocation:string = ''
+  /**
+   * provide initial location object
+   * (only with properties, you cannot call methods of Location class)
+   * @returns Location-like data-object or null
+   */
+  static getInitialLocation() : Location|null {
+    if (this.initialLocation === '') return null
+    return JSON.parse(this.initialLocation) as Location
+  }
+  /**
+   * set initial location. can set only once.
+   * (after first call, all calls are ignored)
+   * @param location location object (window.location or document.location)
+   */
+  static setInitialLocation(location:Location) {
+    if (this.initialLocation === '') {
+      this.initialLocation = JSON.stringify(location)
+    }
+  }
+
   // user name
   private static username?:string // cache
   static getName() : string {

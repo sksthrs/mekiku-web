@@ -69,6 +69,8 @@ class App {
     Log.w("Info",`locale:${locale}`)
     T.setLocale(locale)
 
+    TmpConfig.setInitialLocation(document.location)
+
     window.addEventListener('beforeunload', (ev) => { this.onBeforeUnload(ev) })
     window.addEventListener('unload', (ev) => { this.onUnload(ev) })
 
@@ -96,12 +98,12 @@ class App {
     this.setLoginDialogEvents()
     this.dialogLogin.hidePass() // no password
     this.dialogLogin.setName(TmpConfig.getName())
-    const roomNameRaw = Util.extractPossibleRoomName(UtilDom.getQuery())
-    if (Util.isRoomNameLegit(roomNameRaw)) {
-      this.dialogLogin.setRoom(roomNameRaw)
+    const roomHash = this.getInitialRoomIfLegit()
+    if (roomHash !== '') {
+      this.dialogLogin.setRoom(roomHash)
       this.dialogLogin.hideRoom()
     }
-    this.updatePageTitle(T.t("Login","Login"))
+    this.updatePageTitleWithRoom(roomHash)
     // Cannot support old browsers (MSIE=IE(<11), Trident=IE11, Edge=EdgeHTML). Chromium Edge('Edg') is okay.
     if (Util.contains(navigator.userAgent, 'MSIE', 'Trident', 'Edge')) {
       // do nothing for no-support browser, so shutter remains topmost.
@@ -142,7 +144,7 @@ class App {
         const url_value = json.subtitler_url_value as string
         if (url_value != null && url_value !== '') {
           const queries = Util.queryString2kvArray(UtilDom.getQuery())
-          if ('u' in queries && queries['u'] === url_value) {
+          if (queries.some(q => q.key === 'u' && q.value === url_value)) {
             this.dialogLogin.fixRoleAsSubtitler()
           } else {
             this.dialogLogin.fixRoleAsViewer()
@@ -199,13 +201,23 @@ class App {
 
   // ==================== Misc ====================
 
-  private updateRoomName(room:string) {
-    this.roomName = room
-    UtilDom.setQuery(room)
+  private getInitialRoomIfLegit() : string {
+    const location = TmpConfig.getInitialLocation()
+    const queryString = location?.search?.substring(1) ?? ''
+    const room = Util.extractPossibleRoomName(queryString)
+    return (Util.isRoomNameLegit(room)) ? room : ''
+  }
+
+  private updateUrlWithRoom(room:string) {
+    const q = Util.makeQueryStringWithNewRoom(room, UtilDom.getQuery())
+    UtilDom.setQuery(q)
+  }
+
+  private updatePageTitleWithRoom(room:string, atStart:boolean = true) {
     if (room.length > 0) {
       this.updatePageTitle(T.t("Room","General") + " " + room)
     } else {
-      this.updatePageTitle(T.t("Login","Login"))
+      this.updatePageTitle('')
     }
   }
 
@@ -213,6 +225,12 @@ class App {
     if (this.pageTitle.length < 1) {
       this.pageTitle = document.title
     }
+
+    if (title.length < 1) {
+      document.title = this.pageTitle
+      return
+    }
+
     if (atStart) {
       document.title = title + " - " + this.pageTitle
     } else {
@@ -322,7 +340,13 @@ class App {
           debugLevel: TmpConfig.getDebugLevel()
         }
       )
-      this.updateRoomName(info.room)
+      const initialRoom = this.getInitialRoomIfLegit()
+      const room = (initialRoom !== '') ? initialRoom : info.room
+      if (initialRoom === '') {
+        this.updatePageTitleWithRoom(room)
+        this.updateUrlWithRoom(room)
+      }
+      this.roomName = room
       this.paneMonitor.clearMembers()
       if (info.memberType === MemberType.WEB_VIEWER) {
         this.setViewerStyle()
@@ -629,7 +653,11 @@ class App {
     if (this.dialogLogin.isShown()) return // already shown
     this.dialogLogin.setRoom(this.roomName)
     this.dialogLogin.setName(TmpConfig.getName())
-    this.updateRoomName('')
+    const initialRoom = this.getInitialRoomIfLegit()
+    if (initialRoom === '') {
+      this.updatePageTitleWithRoom('')
+      this.updateUrlWithRoom('')
+    }
     this.paneMonitor.clearMembers()
     const isSubtitler = TmpConfig.getMemberType() === MemberType.WEB_SUBTITLER
     const hasMain = this.paneMain.hasMainLog() && isSubtitler

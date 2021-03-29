@@ -25,14 +25,17 @@ export class Util {
   }
 
   /**
-   * Extract possible room-name (last key in query string) from query-string
+   * Extract possible room-name (last key without value in query string) from query-string
    * @param src source string (assumed as query-string without first '?')
    * @returns possible room-name or ''
    */
   static extractPossibleRoomName(src:string) : string {
     const keyValuePairs = Util.queryString2kvArray(src)
     const lastPair = keyValuePairs[keyValuePairs.length - 1]
+    if (lastPair.key !== '' && lastPair.value === '') {
     return lastPair.key
+  }
+    return ''
   }
 
   static queryString2kvArray(queryString:string) : Array<KeyValuePair<string,string>> {
@@ -44,6 +47,44 @@ export class Util {
       result.push({key:k, value:v})
     })
     return result
+  }
+
+  /**
+   * make query string with new room-hash
+   * @param room room-hash (can be empty string)
+   * @param oldQuery old query string, without leading '?'
+   * @returns new query string without leading '?'
+   * @example
+   * let q1 = makeQueryStringWithNewRoom('myRoom','') // 'myRoom'
+   * let q2 = makeQueryStringWithNewRoom('myRoom','u=i') // 'u=i&myRoom'
+   * let q3 = makeQueryStringWithNewRoom('myRoom','oldRoom') // 'myRoom'
+   * let q4 = makeQueryStringWithNewRoom('myRoom','u=i&oldRoom') // 'u=i&myRoom'
+   * let q5 = makeQueryStringWithNewRoom('','oldRoom') // ''
+   * let q6 = makeQueryStringWithNewRoom('','u=i&oldRoom') // 'u=i'
+   */
+  static makeQueryStringWithNewRoom(room:string, oldQuery:string) : string {
+    if (oldQuery === '') {
+      return room
+    }
+
+    const kvArray = this.queryString2kvArray(oldQuery)
+
+    // If old query does not contain room-hash...
+    if (kvArray[kvArray.length - 1].value !== '') {
+      return (room.length>0) ? oldQuery + '&' + room : oldQuery
+    }
+
+    // Now, old query must contain room-hash.
+
+    // If old query is just room-hash...
+    if (kvArray.length === 1) {
+      return room
+    }
+
+    // Now, old query contains room-hash and other parts
+    const ix = oldQuery.lastIndexOf('&')
+    const remainQuery = oldQuery.substring(0,ix)
+    return (room.length>0) ? remainQuery + '&' + room : remainQuery
   }
 
   /**
