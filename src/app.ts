@@ -26,6 +26,7 @@ import TmpConfig from "./TmpConfig";
 import { DialogConfigViewer } from "./dialogConfigViewer";
 import Split from "split.js"
 import DialogNotify from "./dialogNotify";
+import { Apis } from "./apis";
 
 class App {
   private comm: MekikuComm
@@ -57,7 +58,6 @@ class App {
   private splitDisplayMonitor?: Split.Instance
   private splitPft?: Split.Instance
   private isErrorHandling: boolean = false
-  private readonly IS_BROWSER_AUTH = 'browser'
 
   constructor() {
     const localConfig = localStorage.getItem('config')
@@ -96,7 +96,7 @@ class App {
 
     this.dialogLogin = new DialogLogin()
     this.setLoginDialogEvents()
-    this.dialogLogin.hidePass() // no password
+    this.dialogLogin.hidePass() // default : no password
     this.dialogLogin.setName(TmpConfig.getName())
     const roomHash = this.getInitialRoomIfLegit()
     if (roomHash !== '') {
@@ -104,6 +104,7 @@ class App {
       this.dialogLogin.hideRoom()
     }
     this.updatePageTitleWithRoom(roomHash)
+
     // Cannot support old browsers (MSIE=IE(<11), Trident=IE11, Edge=EdgeHTML). Chromium Edge('Edg') is okay.
     if (Util.contains(navigator.userAgent, 'MSIE', 'Trident', 'Edge')) {
       // do nothing for no-support browser, so shutter remains topmost.
@@ -114,44 +115,7 @@ class App {
       this.dialogLogin.showDialog()
     }
 
-    // fetch config.json
-    fetch( "config.json?" + Date.now().toString() )
-    .then(response => {
-      return response.json()
-    })
-    .then(json => {
-      if ("api_key" in json) {
-        const apikey = json.api_key as string
-        TmpConfig.setApiKey(apikey)
-        this.dialogLogin.enableLogin()
-      }
-
-      if ("debug_level" in json) {
-        const debuglevel = json.debug_level as number
-        TmpConfig.setDebugLevel(debuglevel)
-      }
-
-      if ("auth_url" in json) {
-        const authurl = json.auth_url as string
-        TmpConfig.setAuthUrl(authurl)
-        if (authurl.length > 0) {
-          this.dialogLogin.showPass()
-        }
-      }
-
-      this.dialogLogin.clearRole()
-      if ("subtitler_url_value" in json) {
-        const url_value = json.subtitler_url_value as string
-        if (url_value != null && url_value !== '') {
-          const queries = Util.queryString2kvArray(UtilDom.getQuery())
-          if (queries.some(q => q.key === 'u' && q.value === url_value)) {
-            this.dialogLogin.fixRoleAsSubtitler()
-          } else {
-            this.dialogLogin.fixRoleAsViewer()
-          }
-        }
-      }
-    })
+    this.fetchConfig().then(result => {})
 
     this.paneMain = new PaneMain()
 
@@ -203,7 +167,8 @@ class App {
 
   private getInitialRoomIfLegit() : string {
     const location = TmpConfig.getInitialLocation()
-    const queryString = location?.search?.substring(1) ?? ''
+    const queryString = location?.search?.substring(1)
+    if (queryString == null) return ''
     const room = Util.extractPossibleRoomName(queryString)
     return (Util.isRoomNameLegit(room)) ? room : ''
   }
@@ -236,6 +201,92 @@ class App {
     } else {
       document.title = this.pageTitle + " - " + title
     }
+  }
+
+  // ==================== Asynchronous ====================
+
+  private async fetchConfig() : Promise<boolean> {
+    const responseJson = await fetch( "config.json?" + Date.now().toString() )
+    const json = await responseJson.json()
+    if (this.onConfigFetch(json) !== true) return false
+
+    const authUrl = TmpConfig.getAuthUrl()
+
+    // [CASE] no authectication
+    if (authUrl === '') {
+      return true
+    }
+
+    // [CASE] client-only password (use for roomhash)
+    if (authUrl === TmpConfig.BROWSER_AUTH) {
+      this.dialogLogin.showPass()
+      return true
+    }
+
+    // [CASE] application-server authentication
+    const roomHash = this.getInitialRoomIfLegit()
+    const responseQuery = await fetch(authUrl + roomHash)
+    if (responseQuery.ok)
+    {
+      const jsonRoom = await responseQuery.json()
+      return this.onRoomFetch(jsonRoom)
+    } else {
+      return false
+    }
+  }
+
+  private onConfigFetch(json:unknown) : boolean {
+    if (!Apis.isFetchConfigResponse(json)) return false
+
+    TmpConfig.setApiKey(json.api_key)
+    this.dialogLogin.enableLogin()
+    TmpConfig.setDebugLevel(json.debug_level)
+    TmpConfig.setAuthUrl(json.auth_url)
+
+    TmpConfig.setUserType('')
+    this.dialogLogin.clearRole()
+    if (json.subtitler_url_value != null && json.subtitler_url_value !== '') {
+      const queries = Util.queryString2kvArray(UtilDom.getQuery())
+      if (queries.some(q => q.key === 'u' && q.value === json.subtitler_url_value)) {
+        TmpConfig.setUserType('i')
+        this.dialogLogin.fixRoleAsSubtitler()
+      } else {
+        TmpConfig.setUserType('v')
+        this.dialogLogin.fixRoleAsViewer()
+      }
+    }
+
+    return true
+  }
+
+  private onRoomFetch(json:unknown) : boolean {
+    if (!Apis.isGetRoomResponse(json)) return false
+
+    const showhide = (name: string, pass: string) => {
+      if (name === Apis.HIDE) {
+        this.dialogLogin.hideName()
+      } else {
+        this.dialogLogin.showName()
+      }
+      if (pass === Apis.HIDE) {
+        this.dialogLogin.hidePass()
+      } else {
+        this.dialogLogin.showPass()
+      }
+    }
+
+    switch (TmpConfig.getUserType()) {
+      case 'i':
+        showhide(Apis.SHOW, json.ip)
+        break
+      case 'v':
+        showhide(json.vn, json.vp)
+        break
+      default:
+        showhide(Apis.SHOW, Apis.SHOW)
+        break
+    }
+    return true
   }
 
   // ==================== Events ====================

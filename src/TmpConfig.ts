@@ -1,4 +1,8 @@
+export type UserType = 'i' | 'v' | ''
+
 class TmpConfig {
+  static readonly BROWSER_AUTH = 'browser'
+
   // initial URL (URL might be overwritten)
   private static initialLocation:string = ''
   /**
@@ -63,11 +67,30 @@ class TmpConfig {
   }
 
   private static authUrl:string = ''
+  /**
+   * Provide authorization URL
+   * @returns URL ends with '/', ''(no-auth) or 'browser'
+   */
   static getAuthUrl() : string {
     return this.authUrl
   }
   static setAuthUrl(url:string) {
-    this.authUrl = url
+    if (url === '' || url === TmpConfig.BROWSER_AUTH)
+    {
+      this.authUrl = url
+    }
+    else
+    {
+      this.authUrl = url + ((url.endsWith('/')) ? '' : '/')
+    }
+  }
+
+  private static userType:UserType = ''
+  static getUserType() : UserType {
+    return this.userType
+  }
+  static setUserType(t:UserType) {
+    this.userType = t
   }
 }
 
