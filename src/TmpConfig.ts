@@ -1,4 +1,5 @@
 export type UserType = 'i' | 'v' | ''
+export type AuthType = 'none' | 'browser' | 'server'
 
 class TmpConfig {
   static readonly BROWSER_AUTH = 'browser'
@@ -84,6 +85,11 @@ class TmpConfig {
       this.authUrl = url + ((url.endsWith('/')) ? '' : '/')
     }
   }
+  static getAuthType() : AuthType {
+    if (this.authUrl === '') return 'none'
+    if (this.authUrl === TmpConfig.BROWSER_AUTH) return 'browser'
+    return 'server'
+  }
 
   private static userType:UserType = ''
   static getUserType() : UserType {
@@ -92,6 +98,18 @@ class TmpConfig {
   static setUserType(t:UserType) {
     this.userType = t
   }
-}
+
+  private static zoomUrl:string = ''
+  static getZoomUrl() : string {
+    return this.zoomUrl
+  }
+  static setZoomUrl(url:string) {
+    this.zoomUrl = url
+  }
+  static isZoomAvailable(): boolean {
+    return this.zoomUrl.startsWith('https://')
+  }
+
+} // end of TmpConfig
 
 export default TmpConfig

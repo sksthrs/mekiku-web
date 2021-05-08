@@ -4,6 +4,7 @@ import Log from "./log"
 import {Content, ContentClass, ContentToSend, MemberType, ContentToSendClass} from './content'
 import LoginInfo from "./loginInfo"
 import { Util } from "./util"
+import TmpConfig from "./TmpConfig"
 
 export class MekikuCommEvents {
   /** called when Peer-ID confirmed */
@@ -27,12 +28,14 @@ export interface MekikuCommOpenOption {
   debugLevel?: number
   id?: string
   handleOpen?: (id:string) => void
+  credential?: Credential
 }
 
 class MekikuCommOpenOptionClass implements MekikuCommOpenOption {
   debugLevel: number = 2
   id?: string
   handleOpen: (id:string) => void = id => {}
+  credential?: Credential
 }
 
 /**
@@ -98,9 +101,13 @@ class MekikuComm {
       key: key,
       debug: this.openOption.debugLevel,
     }
-    if (this.openOption.id != null) {
+    if (this.openOption.id != null && this.openOption.credential != null) {
       // Log.w('Info',`comm.open : construct new peer(id=${this.openOption.id})`)
-      this.peer = new Peer(this.openOption.id, opt)
+      const optWithAuth = {
+        ...opt,
+        credential: this.openOption.credential
+      }
+      this.peer = new Peer(this.openOption.id, optWithAuth)
     } else {
       // Log.w('Info',`comm.open : construct new peer(id: set by skyway)`)
       this.peer = new Peer(opt)
@@ -124,7 +131,20 @@ class MekikuComm {
       throw new Error('Illegal room name')
     }
 
-    var roomName = await this.makeRoomName(info.room, info.pass)
+    let roomName = ''
+    switch(TmpConfig.getAuthType()) {
+      case 'none':
+        roomName = info.room
+        break
+      case 'browser':
+        roomName = await this.makeRoomName(info.room, info.pass)
+        break
+      case 'server':
+        roomName = info.room
+        break
+      default:
+        throw new Error('Impossible authentication type!')
+    }
     const r = this.peer.joinRoom(roomName, {
       mode: mode
     })

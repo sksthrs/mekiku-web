@@ -4,9 +4,11 @@ import LoginInfo from "./loginInfo"
 
 class DialogLogin {
   private dialogLogin = document.getElementById('login') as HTMLDivElement
+  private messageRow = document.getElementById('loginTable_messageRow') as HTMLTableRowElement
   private roomRow = document.getElementById('loginTable_roomRow') as HTMLTableRowElement
   private nameRow = document.getElementById('loginTable_nameRow') as HTMLTableRowElement
   private passRow = document.getElementById('loginTable_passRow') as HTMLTableRowElement
+  private messageCell = document.getElementById('login-message') as HTMLTableCellElement
   private viewerChoice = document.getElementById('loginTable_role0') as HTMLSpanElement
   private viewerRadio = document.getElementById('role0') as HTMLInputElement
   private subtitlerChoice = document.getElementById('loginTable_role1') as HTMLSpanElement
@@ -107,7 +109,17 @@ class DialogLogin {
     this.nameInput.value = name
   }
 
+  showDialogWithMessage(message:string, canGetMain:boolean=false, canGetChat:boolean=false) {
+    this.showMessage(message)
+    this.doShowDialog(canGetMain, canGetChat)
+  }
+
   showDialog(canGetMain:boolean=false, canGetChat:boolean=false) {
+    this.hideMessage()
+    this.doShowDialog(canGetMain, canGetChat)
+  }
+
+  private doShowDialog(canGetMain:boolean=false, canGetChat:boolean=false) {
     if (canGetMain === true) {
       UtilDom.displayOn(this.buttonDownloadMain)
     } else {
@@ -188,6 +200,16 @@ class DialogLogin {
   hidePass() {
     this.passInput.required = false
     UtilDom.displayOff(this.passRow)
+  }
+
+  private showMessage(message:string) {
+    this.messageCell.textContent = message
+    UtilDom.displayOn(this.messageRow, "table-row")
+  }
+
+  private hideMessage() {
+    this.messageCell.textContent = ''
+    UtilDom.displayOff(this.messageRow)
   }
 
 }

@@ -1,4 +1,4 @@
-import MekikuComm, { MekikuCommEvents } from "./mekikuComm"
+import MekikuComm, { MekikuCommEvents, MekikuCommOpenOption } from "./mekikuComm"
 import Log from "./log";
 import AppControlPane from "./appControlPane";
 import DialogLogin from "./dialogLogin";
@@ -115,7 +115,12 @@ class App {
       this.dialogLogin.showDialog()
     }
 
-    this.fetchConfig().then(result => {})
+    this.fetchConfig().then(result => {
+      if (result !== true) {
+        this.dialogLogin.hideDialog()
+        this.dialogNotify.showDialog(T.t('Error', 'General'), T.t('No Room.', 'Login'), false)
+      }
+    })
 
     this.paneMain = new PaneMain()
 
@@ -210,22 +215,27 @@ class App {
     const json = await responseJson.json()
     if (this.onConfigFetch(json) !== true) return false
 
-    const authUrl = TmpConfig.getAuthUrl()
+    const authType = TmpConfig.getAuthType()
 
     // [CASE] no authectication
-    if (authUrl === '') {
+    if (authType === 'none') {
       return true
     }
 
     // [CASE] client-only password (use for roomhash)
-    if (authUrl === TmpConfig.BROWSER_AUTH) {
+    if (authType === 'browser') {
       this.dialogLogin.showPass()
       return true
     }
 
     // [CASE] application-server authentication
     const roomHash = this.getInitialRoomIfLegit()
-    const responseQuery = await fetch(authUrl + roomHash)
+    if (roomHash == null || roomHash == '') { // if room is not specified, there is no error now.
+      this.dialogLogin.showName()
+      this.dialogLogin.showPass()
+      return true;
+    }
+    const responseQuery = await Apis.queryRoom(roomHash)
     if (responseQuery.ok)
     {
       const jsonRoom = await responseQuery.json()
@@ -350,6 +360,14 @@ class App {
     this.appControl.onLogout = () => {
       this.comm.send_room(ContentUtil.makeLogoffData())
       this.comm.leaveRoom()
+      if (TmpConfig.getAuthType() === 'server') {
+        const f = async () => {
+          const response = await Apis.logoutRoom()
+          if (response.ok !== true) {
+            Log.w('Error', `Logout POST failed : ${response.status}:${response.statusText}`)
+          }
+        }
+      }
     }
     this.appControl.onSetting = () => {
       if (this.isViewer) {
@@ -374,36 +392,72 @@ class App {
 
     this.dialogLogin.onLoginClick = info => {
       this.loginInfo = info
-      if (info.room.length < 1) {
-        info.room = location.hash
-      }
       TmpConfig.setName(info.name)
       TmpConfig.setMemberType(info.memberType)
-      let login_info = info
-      this.comm.open(
-        TmpConfig.getApiKey(),
-        {
-          handleOpen: id => {
-            this.comm.joinRoom(login_info)
-            .then(() => {})
-            .catch(error => {})
-          },
-          debugLevel: TmpConfig.getDebugLevel()
-        }
-      )
-      const initialRoom = this.getInitialRoomIfLegit()
-      const room = (initialRoom !== '') ? initialRoom : info.room
-      if (initialRoom === '') {
-        this.updatePageTitleWithRoom(room)
-        this.updateUrlWithRoom(room)
+      switch (TmpConfig.getAuthType()) {
+        case 'none':
+          this.doLogin(info)
+          break
+        case 'browser':
+          this.doLogin(info)
+          break
+        case 'server':
+          const f = async () => {
+            const response = await Apis.loginRoom({
+              roomHash: info.room,
+              userName: info.name,
+              userType: info.memberType,
+              password: info.pass,
+            })
+            if (response.ok !== true) {
+              Log.w('Error', `Login POST failed : ${response.status}:${response.statusText}`)
+              this.dialogLogin.showDialogWithMessage(T.t('Login failed.', 'Login'))
+              return
+            }
+            const json = await response.json()
+            if (Apis.isPostLoginResponse(json)) {
+              TmpConfig.setZoomUrl(json.zoomUrl)
+              this.doLogin(info, {
+                id: json.id,
+                credential: json.credential,
+              })
+            } else {
+              this.dialogNotify.showDialog(T.t('Error', 'General'), T.t('System error.', 'General'), false)
+              return
+            }
+          }
+          f() // execution of async...
+          break
+        default:
+          throw new Error('wrong authentication type!')
       }
-      this.roomName = room
-      this.paneMonitor.clearMembers()
-      if (info.memberType === MemberType.WEB_VIEWER) {
-        this.setViewerStyle()
-      } else {
-        this.setSubtitlerStyle()
-      }
+    }
+  }
+
+  private doLogin(info:LoginInfo, option?:MekikuCommOpenOption) {
+    const login_info = info
+    const openOption:MekikuCommOpenOption = {
+      handleOpen: id => {
+        this.comm.joinRoom(login_info)
+        .then(() => {})
+        .catch(error => {})
+      },
+      debugLevel: TmpConfig.getDebugLevel(),
+      ...option
+    }
+    this.comm.open(TmpConfig.getApiKey(), openOption)
+    const initialRoom = this.getInitialRoomIfLegit()
+    const room = /*(initialRoom !== '') ? initialRoom :*/ info.room
+    if (initialRoom === '') {
+      this.updatePageTitleWithRoom(room)
+      this.updateUrlWithRoom(room)
+    }
+    this.roomName = room
+    this.paneMonitor.clearMembers()
+    if (info.memberType === MemberType.WEB_VIEWER) {
+      this.setViewerStyle()
+    } else {
+      this.setSubtitlerStyle()
     }
   }
 

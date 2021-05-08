@@ -210,6 +210,7 @@ export class T {
         "Number of Viewers" : "閲覧者数",
         "Error occured on file access.\nIf another application is using it, first quit it." : "ファイルへのアクセスでエラーが発生しました。\n他のプログラムでファイルを開いていたら、そちらを終了してください。",
         "Communication error." : "通信エラーです。",
+        "System error." : "システムエラーです。",
         "Detail" : "詳細",
         "Internet Explorer and old version of Microsoft Edge are not supported." : "Internet Explorerおよび旧版のMicrosoft Edgeでは利用できません。",
       },
@@ -281,6 +282,7 @@ export class T {
         "Subtitler" : "入力者（要約筆記者）",
         "Password" : "パスワード",
         "Login failed." : "ログインに失敗しました。",
+        "No Room." : "ルームが存在しません。",
       },
       "Config" : {
         "Config" : "設定",
@@ -378,6 +380,7 @@ export class T {
         // "Number of Viewers" : "",
         "Error occured on file access.\nIf another application is using it, first quit it." : "เกิดข้อผิดพลาดในการอ่านไฟล์\nถ้าแอพพลิเคชั่นอื่นกำลังใช้ไฟล์นี้\nให้ปิดไฟล์นี้ก่อน",
         // "Communication error." : "",
+        // "System error." : "",
         // "Detail" : "",
         // "Internet Explorer and old version of Microsoft Edge are not supported." : "",
       },
@@ -449,6 +452,7 @@ export class T {
         // "Subtitler" : "",
         // "Password" : "",
         // "Login failed." : "",
+        // "No Room." : "",
       },
       "Config" : {
         "Config" : "การตั้งค่า ",

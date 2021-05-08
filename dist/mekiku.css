@@ -669,6 +669,10 @@ div#pft-panes {
   padding-bottom: 0px;
   margin-bottom: 0.3em;
 }
+#login .error_message {
+  text-align: center;
+  color: red;
+}
 #login input {
   font-family: inherit;
   font-size   : 100%;

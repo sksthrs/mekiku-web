@@ -21,9 +21,14 @@ class DialogNotify {
     this.onOkClick = () => {}
   }
 
-  showDialog(title:string, message:string) {
+  showDialog(title:string, message:string, showButtons:boolean = true) {
     this.title.textContent = title
     this.message.textContent = message
+    if (showButtons === true) {
+      UtilDom.show(this.buttonPane)
+    } else {
+      UtilDom.hide(this.buttonPane)
+    }
     UtilDom.show(this.dialog)
     // do not focus okButton, because dialog would be closed just after shown (think you hit enter key in login button with wrong password)
   }
