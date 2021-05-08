@@ -1,4 +1,4 @@
-export type UserType = 'i' | 'v' | ''
+export type UserType = 'wi' | 'wv' | ''
 export type AuthType = 'none' | 'browser' | 'server'
 
 class TmpConfig {

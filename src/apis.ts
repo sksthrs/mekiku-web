@@ -7,7 +7,7 @@ export namespace Apis {
   export type FetchConfigResponse = {
     api_key: string,
     debug_level: number,
-    subtitler_url_value: string,
+    subtitler_url_key: string,
     auth_url: string
   }
 
@@ -16,7 +16,7 @@ export namespace Apis {
     return (
       typeof r?.api_key === 'string'
       && typeof r?.debug_level === 'number'
-      && typeof r?.subtitler_url_value === 'string'
+      && typeof r?.subtitler_url_key === 'string'
       && typeof r?.auth_url === 'string'
     )
   }

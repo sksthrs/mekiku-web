@@ -255,13 +255,13 @@ class App {
 
     TmpConfig.setUserType('')
     this.dialogLogin.clearRole()
-    if (json.subtitler_url_value != null && json.subtitler_url_value !== '') {
+    if (json.subtitler_url_key != null && json.subtitler_url_key !== '') {
       const queries = Util.queryString2kvArray(UtilDom.getQuery())
-      if (queries.some(q => q.key === 'u' && q.value === json.subtitler_url_value)) {
-        TmpConfig.setUserType('i')
+      if (queries.some(q => q.key ===  json.subtitler_url_key)) {
+        TmpConfig.setUserType('wi')
         this.dialogLogin.fixRoleAsSubtitler()
       } else {
-        TmpConfig.setUserType('v')
+        TmpConfig.setUserType('wv')
         this.dialogLogin.fixRoleAsViewer()
       }
     }
@@ -286,10 +286,10 @@ class App {
     }
 
     switch (TmpConfig.getUserType()) {
-      case 'i':
+      case 'wi':
         showhide(Apis.SHOW, json.ip)
         break
-      case 'v':
+      case 'wv':
         showhide(json.vn, json.vp)
         break
       default:

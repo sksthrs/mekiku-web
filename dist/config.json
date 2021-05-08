@@ -1,6 +1,6 @@
 {
   "api_key" : "03ab2f52-64bb-4ffa-a395-9a335b8ce95d",
   "debug_level" : 2,
-  "subtitler_url_value" : "",
+  "subtitler_url_key" : "",
   "auth_url" : "browser"
 }
