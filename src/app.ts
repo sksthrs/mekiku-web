@@ -211,9 +211,14 @@ class App {
   // ==================== Asynchronous ====================
 
   private async fetchConfig() : Promise<boolean> {
+    try {
     const responseJson = await fetch( "config.json?" + Date.now().toString() )
     const json = await responseJson.json()
     if (this.onConfigFetch(json) !== true) return false
+    } catch(e:any) {
+      Log.w('Error', `Error in fetching config. message:${e}`)
+      return false
+    }
 
     const authType = TmpConfig.getAuthType()
 
@@ -235,12 +240,17 @@ class App {
       this.dialogLogin.showPass()
       return true;
     }
+    try {
     const responseQuery = await Apis.queryRoom(roomHash)
     if (responseQuery.ok)
     {
       const jsonRoom = await responseQuery.json()
       return this.onRoomFetch(jsonRoom)
     } else {
+      return false
+    }
+    } catch(e:any) {
+      Log.w('Error', `Error in querying room. Message:${e}`)
       return false
     }
   }
@@ -367,6 +377,7 @@ class App {
             Log.w('Error', `Logout POST failed : ${response.status}:${response.statusText}`)
           }
         }
+        f()
       }
     }
     this.appControl.onSetting = () => {
@@ -403,6 +414,7 @@ class App {
           break
         case 'server':
           const f = async () => {
+            try {
             const response = await Apis.loginRoom({
               roomHash: info.room,
               userName: info.name,
@@ -423,6 +435,10 @@ class App {
               })
             } else {
               this.dialogNotify.showDialog(T.t('Error', 'General'), T.t('System error.', 'General'), false)
+              return
+            }
+            } catch(e:any) {
+              Log.w('Error', `Error in login. Message:${e}`)
               return
             }
           }
