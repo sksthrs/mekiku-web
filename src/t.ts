@@ -235,6 +235,9 @@ export class T {
         "logout" : "ログアウト", // real message : "(logout : NAME_OF_MEMBER)"
         "A viewer left" : "閲覧者が退室",
         "memo" : "メモ",
+        "Zoom captioning has been set." : "Zoom字幕出力が設定されました。",
+        "Zoom captioning has been cleared." : "Zoom字幕出力は、解除されました。",
+        "Failed sending captions." : "字幕送信が失敗しています。",
       },
       "Monitor" : {
         "Input Monitor" : "入力モニター",
@@ -305,6 +308,7 @@ export class T {
         "Save chat log" : "連絡窓のログを保存する",
         "Startup Settings" : "起動時設定",
         "Keep Last Settings" : "前回終了時の設定を初期設定にする",
+        "Zoom API key" : "Zoom APIキー",
       },
       "Config|Main" : {
         "Main Display" : "メイン表示部",
@@ -405,6 +409,8 @@ export class T {
         // "logout" : "", // real message : "(logout : NAME_OF_MEMBER)"
         // "A viewer left" : "",
         // "memo" : "",
+        // "Zoom captioning has been set." : "Zoom字幕出力が設定されました。",
+        // "Zoom captioning has been cleared." : "Zoom字幕出力は、解除されました。",
       },
       "Monitor" : {
         "Input Monitor" : "มอนิเตอร์อินพุท",
@@ -475,6 +481,7 @@ export class T {
         "Save chat log" : "บันทึก (ล็อกหน้าต่างแช็ท)",
         "Startup Settings" : "ตั้งค่าเริ่มต้น",
         "Keep Last Settings" : "ตั้งเป็นค่าล่าสุด",
+        //"Zoom API key" : "",
       },
       "Config|Main" : {
         "Main Display" : "จอแสดงผลหลัก",

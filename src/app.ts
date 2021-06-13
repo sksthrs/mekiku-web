@@ -6,7 +6,7 @@ import LoginInfo from "./loginInfo";
 import { PaneInput } from "./paneInput";
 import { PaneFkey } from "./paneFkey";
 import { PaneMonitor } from "./paneMonitor";
-import { ContentType, ContentUtil, Content, ContentClass, ContentDataDisplay, MemberType } from "./content";
+import { ContentType, ContentUtil, Content, ContentClass, ContentDataDisplay, MemberType, ChatSystemType } from "./content";
 import { MemberInfoClass } from "./memberManager";
 import { Util } from "./util";
 import { PaneChat } from "./paneChat";
@@ -212,9 +212,9 @@ class App {
 
   private async fetchConfig() : Promise<boolean> {
     try {
-    const responseJson = await fetch( "config.json?" + Date.now().toString() )
-    const json = await responseJson.json()
-    if (this.onConfigFetch(json) !== true) return false
+      const responseJson = await fetch( "config.json?" + Date.now().toString() )
+      const json = await responseJson.json()
+      if (this.onConfigFetch(json) !== true) return false
     } catch(e:any) {
       Log.w('Error', `Error in fetching config. message:${e}`)
       return false
@@ -241,14 +241,14 @@ class App {
       return true;
     }
     try {
-    const responseQuery = await Apis.queryRoom(roomHash)
-    if (responseQuery.ok)
-    {
-      const jsonRoom = await responseQuery.json()
-      return this.onRoomFetch(jsonRoom)
-    } else {
-      return false
-    }
+      const responseQuery = await Apis.queryRoom(roomHash)
+      if (responseQuery.ok)
+      {
+        const jsonRoom = await responseQuery.json()
+        return this.onRoomFetch(jsonRoom)
+      } else {
+        return false
+      }
     } catch(e:any) {
       Log.w('Error', `Error in querying room. Message:${e}`)
       return false
@@ -415,28 +415,28 @@ class App {
         case 'server':
           const f = async () => {
             try {
-            const response = await Apis.loginRoom({
-              roomHash: info.room,
-              userName: info.name,
-              userType: info.memberType,
-              password: info.pass,
-            })
-            if (response.ok !== true) {
-              Log.w('Error', `Login POST failed : ${response.status}:${response.statusText}`)
-              this.dialogLogin.showDialogWithMessage(T.t('Login failed.', 'Login'))
-              return
-            }
-            const json = await response.json()
-            if (Apis.isPostLoginResponse(json)) {
-              TmpConfig.setZoomUrl(json.zoomUrl)
-              this.doLogin(info, {
-                id: json.id,
-                credential: json.credential,
+              const response = await Apis.loginRoom({
+                roomHash: info.room,
+                userName: info.name,
+                userType: info.memberType,
+                password: info.pass,
               })
-            } else {
-              this.dialogNotify.showDialog(T.t('Error', 'General'), T.t('System error.', 'General'), false)
-              return
-            }
+              if (response.ok !== true) {
+                Log.w('Error', `Login POST failed : ${response.status}:${response.statusText}`)
+                this.dialogLogin.showDialogWithMessage(T.t('Login failed.', 'Login'))
+                return
+              }
+              const json = await response.json()
+              if (Apis.isPostLoginResponse(json)) {
+                TmpConfig.setZoomUrl(json.zoomUrl)
+                this.doLogin(info, {
+                  id: json.id,
+                  credential: json.credential,
+                })
+              } else {
+                this.dialogNotify.showDialog(T.t('Error', 'General'), T.t('System error.', 'General'), false)
+                return
+              }
             } catch(e:any) {
               Log.w('Error', `Error in login. Message:${e}`)
               return
@@ -486,6 +486,21 @@ class App {
     })
     this.paneInput.setDoOnEnter((text) => {
       this.sendMain(text)
+      if (TmpConfig.isZoomAvailable()) {
+        const f = async (msg:string) => {
+          const response = await Apis.sendCaption({message: msg})
+          if (response.ok == true) {
+            TmpConfig.resetCaptionErrorCount();
+          } else {
+            Log.w('Error', `Error in sending caption. status:${response.status}/${response.statusText}`)
+            if (TmpConfig.incrementCaptionErrorCount() >= Apis.MAX_ERROR_SENDING_CAPTION) {
+              this.sendChatSystemMessage(ChatSystemType.WARNING, T.t("Failed sending captions.", "Chat"))
+              TmpConfig.resetCaptionErrorCount();
+            }
+          }
+        }
+        f(text)
+      }
     })
     this.paneInput.setDoOnUndo(() => {
       const undoed = this.paneMain.undoLastItem()
@@ -524,9 +539,13 @@ class App {
       this.paneChat.addMessage(TmpConfig.getName(), text)
     })
     this.paneChat.setOnSendSystem((type,arg) => {
-      this.comm.send_room(ContentUtil.makeChatSystemData(type,arg))
-      this.paneChat.addChatSystemMessage(TmpConfig.getName(), type, arg)
+      this.sendChatSystemMessage(type, arg)
     })
+  }
+
+  private sendChatSystemMessage(type:number, arg:string) {
+    this.comm.send_room(ContentUtil.makeChatSystemData(type,arg))
+    this.paneChat.addChatSystemMessage(TmpConfig.getName(), type, arg)
   }
 
   private setPftEvents() {
@@ -615,6 +634,20 @@ class App {
       switch (name) {
         case "misc": {
           this.updateConfig();
+          break;
+        }
+        case "zoom": {
+          const f = async () => {
+            const response = await Apis.updateZoom({
+              url: TmpConfig.getZoomUrl()
+            })
+            if (response.ok === true) {
+              this.comm.queue_room(ContentUtil.makeZoomData(TmpConfig.getZoomUrl()))
+            } else {
+              Log.w('Error', `Error in updating zoom api key. status:${response.status}/${response.statusText}`)
+            }
+          }
+          f()
           break;
         }
         case "main": {
@@ -796,6 +829,7 @@ class App {
   }
 
   private onReceived(data:Content) {
+    Log.w("Error",`onReceived data=${JSON.stringify(data)}`)
     const member = MemberInfoClass.fromContent(data)
     if (ContentType.LOGIN in data) {
       this.comm.send_room(ContentUtil.makeResponseData())
@@ -818,6 +852,12 @@ class App {
     if (ContentUtil.hasUndoData(data)) {
       this.paneMain.addNewUndo(data)
     }
+
+    if (ContentUtil.hasZoomData(data)) {
+      Log.w('Debug',`Zoom data received. URL=${data.Z}`)
+      TmpConfig.setZoomUrl(data.Z)
+    }
+
     if (ContentType.HB in data) {
     }
 

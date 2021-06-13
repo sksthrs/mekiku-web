@@ -90,6 +90,9 @@ class TmpConfig {
     if (this.authUrl === TmpConfig.BROWSER_AUTH) return 'browser'
     return 'server'
   }
+  static useServer() : boolean {
+    return this.getAuthType() === 'server';
+  }
 
   private static userType:UserType = ''
   static getUserType() : UserType {
@@ -104,10 +107,34 @@ class TmpConfig {
     return this.zoomUrl
   }
   static setZoomUrl(url:string) {
+    if (this.useServer() !== true) {
+      this.zoomUrl = ''
+      return
+    }
+    if (url.startsWith('https://') !== true) {
+      this.zoomUrl = ''
+      return
+    }
     this.zoomUrl = url
   }
   static isZoomAvailable(): boolean {
     return this.zoomUrl.startsWith('https://')
+  }
+  static isZoomUrlValid(url:string) : boolean {
+    if (url === '') return true
+    return url.startsWith('https://')
+  }
+
+  private static captionErrorCount:number = 0
+  static getCaptionErrorCount(): number {
+    return this.captionErrorCount
+  }
+  static incrementCaptionErrorCount(): number {
+    this.captionErrorCount++
+    return this.captionErrorCount
+  }
+  static resetCaptionErrorCount() {
+    this.captionErrorCount = 0
   }
 
 } // end of TmpConfig

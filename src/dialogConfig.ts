@@ -3,6 +3,7 @@ import { AppConfig } from "./appConfig";
 import { UtilDom } from "./utilDom";
 import { Tuple2 } from "./util";
 import Log from "./log";
+import TmpConfig from "./TmpConfig";
 
 export class DialogConfig {
   private readonly container = document.getElementById('config-container') as HTMLDivElement
@@ -18,6 +19,8 @@ export class DialogConfig {
   private readonly buttonOpen = document.getElementById('config-open') as HTMLButtonElement
   private readonly buttonSave = document.getElementById('config-save') as HTMLButtonElement
   private readonly buttonReset = document.getElementById('config-reset') as HTMLButtonElement
+  private readonly zoomConfig = document.getElementById('config-general-zoom') as HTMLDivElement
+  private readonly zoomApiKey = document.getElementById('config-general-zoom-api') as HTMLInputElement
   private locales: Array<Tuple2<string, string>> = [];
 
   private paneNames:Array<string> = [];
@@ -68,6 +71,13 @@ export class DialogConfig {
       }
     }
     this.configToDialog();
+
+    if (TmpConfig.useServer()) {
+      UtilDom.displayOn(this.zoomConfig)
+    } else {
+      UtilDom.displayOff(this.zoomConfig)
+    }
+
     this.GeneralTab.click()
     UtilDom.show(this.container)
   }
@@ -132,6 +142,7 @@ export class DialogConfig {
     this.paren2.value = AppConfig.data.getParentheses2();
     this.parenShift1.value = AppConfig.data.getParenthesesShift1();
     this.parenShift2.value = AppConfig.data.getParenthesesShift2();
+    this.zoomApiKey.value = TmpConfig.useServer() ? TmpConfig.getZoomUrl() : ''
 
     // initialize selection of locale select-box
     var localeIx = 0;
@@ -208,6 +219,11 @@ export class DialogConfig {
     if (AppConfig.data.setParenthesesShift1(this.parenShift1.value)) { rParen = true; }
     if (AppConfig.data.setParenthesesShift2(this.parenShift2.value)) { rParen = true; }
     if (rParen && !this.paneNames.includes("input")) { this.paneNames.push("input"); }
+    const zoomKey = this.zoomApiKey.value
+    if (TmpConfig.useServer() && TmpConfig.isZoomUrlValid(zoomKey)) {
+      TmpConfig.setZoomUrl(zoomKey)
+      this.paneNames.push("zoom")
+    }
 
     const current = T.matchLocale(AppConfig.data.getLocale());
     const selectedLocale = this.locales[this.selectLocale.selectedIndex].v1;

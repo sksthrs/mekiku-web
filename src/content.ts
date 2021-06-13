@@ -179,6 +179,17 @@ export class ContentUtil {
     return false
   }
 
+  static makeZoomData(text:string) : ContentDataZoom {
+    return {
+      "Z" : text
+    }
+  }
+  static hasZoomData(d:any) : d is ContentDataZoom {
+    if (!d) return false
+    if (d.Z != null && typeof d.Z === 'string') return true
+    return false
+  }
+
   static makeLogoffData() : object {
     return { "F" : "" }
   }
@@ -209,6 +220,7 @@ export const ChatSystemType = {
   NOW : 0,
   START : 1,
   PRECAUTION: 30,
+  WARNING : 1001,
 } as const
 
 export interface ContentDataDisplay {
@@ -234,4 +246,7 @@ export interface ContentDataPftMon {
 export interface ContentDataUndo {
   U_ID : string,
   U_SENDTIME : number
+}
+export interface ContentDataZoom {
+  Z : string
 }

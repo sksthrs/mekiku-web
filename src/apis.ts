@@ -105,4 +105,44 @@ export namespace Apis {
     })
   }
 
+  // ========== ========== Set Zoom API key ========== ==========
+
+  export type UpdateZoomArgument = {
+    url: string,
+  }
+
+  export const updateZoom = (arg:UpdateZoomArgument): Promise<Response> => {
+    const url = TmpConfig.getAuthUrl() + "zoom"
+    const params = new URLSearchParams()
+    params.append('url', arg.url)
+    return fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: params,
+    })
+  }
+
+  // ========== ========== Set Zoom API key ========== ==========
+
+  export type SendCaptionArgument = {
+    message: string,
+  }
+
+  export const sendCaption = (arg:SendCaptionArgument): Promise<Response> => {
+    const url = TmpConfig.getAuthUrl() + "captions"
+    const params = new URLSearchParams()
+    params.append('message', arg.message)
+    return fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: params,
+    })
+  }
+
+  export const MAX_ERROR_SENDING_CAPTION = 5
+
 }
