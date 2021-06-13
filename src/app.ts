@@ -116,7 +116,13 @@ class App {
     }
 
     this.fetchConfig().then(result => {
-      if (result !== true) {
+      if (result === true) {
+        if (TmpConfig.getAuthType() === 'server') {
+          window.setInterval(() => {
+            this.sendHeartBeat()
+          }, 300*1000) // heartbeat once every 5 minutes
+        }
+      } else {
         this.dialogLogin.hideDialog()
         this.dialogNotify.showDialog(T.t('Error', 'General'), T.t('No Room.', 'Login'), false)
       }
@@ -586,6 +592,12 @@ class App {
     }
     this.pftFileController.onError = (ev,file) => {
       alert(`Error loading ${file.name} : ${ev.target?.error}`)
+    }
+  }
+
+  private sendHeartBeat() {
+    if (this.comm.isInRoom() === true && TmpConfig.getUserType() === 'wi') {
+      Apis.sendHeartBeat({message:TmpConfig.getName()}) // sending name for now
     }
   }
 

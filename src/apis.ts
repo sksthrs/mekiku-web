@@ -145,4 +145,23 @@ export namespace Apis {
 
   export const MAX_ERROR_SENDING_CAPTION = 5
 
+  // ========== ========== Set Zoom API key ========== ==========
+
+  export type SendHeartBeatArgument = {
+    message: string,
+  }
+
+  export const sendHeartBeat = (arg:SendHeartBeatArgument): Promise<Response> => {
+    const url = TmpConfig.getAuthUrl() + "hb"
+    const params = new URLSearchParams()
+    params.append('message', arg.message)
+    return fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: params,
+    })
+  }
+
 }
