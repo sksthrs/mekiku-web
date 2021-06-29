@@ -651,7 +651,7 @@ class App {
         case "zoom": {
           const f = async () => {
             const response = await Apis.updateZoom({
-              url: TmpConfig.getZoomUrl()
+              key: TmpConfig.getZoomUrl()
             })
             if (response.ok === true) {
               this.comm.queue_room(ContentUtil.makeZoomData(TmpConfig.getZoomUrl()))

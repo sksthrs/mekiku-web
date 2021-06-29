@@ -108,13 +108,13 @@ export namespace Apis {
   // ========== ========== Set Zoom API key ========== ==========
 
   export type UpdateZoomArgument = {
-    url: string,
+    key: string,
   }
 
   export const updateZoom = (arg:UpdateZoomArgument): Promise<Response> => {
     const url = TmpConfig.getAuthUrl() + "zoom"
     const params = new URLSearchParams()
-    params.append('url', arg.url)
+    params.append('key', arg.key)
     return fetch(url, {
       method: 'POST',
       headers: {
