@@ -308,7 +308,7 @@ export class T {
         "Save chat log" : "連絡窓のログを保存する",
         "Startup Settings" : "起動時設定",
         "Keep Last Settings" : "前回終了時の設定を初期設定にする",
-        "Zoom API key" : "Zoom APIキー",
+        "Zoom API token" : "Zoom APIトークン",
       },
       "Config|Main" : {
         "Main Display" : "メイン表示部",
@@ -481,7 +481,7 @@ export class T {
         "Save chat log" : "บันทึก (ล็อกหน้าต่างแช็ท)",
         "Startup Settings" : "ตั้งค่าเริ่มต้น",
         "Keep Last Settings" : "ตั้งเป็นค่าล่าสุด",
-        //"Zoom API key" : "",
+        //"Zoom API token" : "",
       },
       "Config|Main" : {
         "Main Display" : "จอแสดงผลหลัก",
