@@ -124,7 +124,7 @@ export namespace Apis {
     })
   }
 
-  // ========== ========== Set Zoom API key ========== ==========
+  // ========== ========== Send Caption ========== ==========
 
   export type SendCaptionArgument = {
     message: string,
@@ -145,7 +145,7 @@ export namespace Apis {
 
   export const MAX_ERROR_SENDING_CAPTION = 5
 
-  // ========== ========== Set Zoom API key ========== ==========
+  // ========== ========== Heartbeat (for keeping server session) ========== ==========
 
   export type SendHeartBeatArgument = {
     message: string,

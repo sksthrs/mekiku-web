@@ -111,18 +111,21 @@ class TmpConfig {
       this.zoomUrl = ''
       return
     }
-    if (url.startsWith('https://') !== true) {
+    if (this.isZoomUrl(url) !== true) {
       this.zoomUrl = ''
       return
     }
     this.zoomUrl = url
   }
   static isZoomAvailable(): boolean {
-    return this.zoomUrl.startsWith('https://')
+    return this.isZoomUrl(this.zoomUrl)
+  }
+  static isZoomUrl(url:string) : boolean {
+    return /^https:\/\/([A-Za-z0-9_\-\.]+\.)?zoom\.us\//.test(url)
   }
   static isZoomUrlValid(url:string) : boolean {
     if (url === '') return true
-    return url.startsWith('https://')
+    return this.isZoomUrl(url)
   }
 
   private static captionErrorCount:number = 0
