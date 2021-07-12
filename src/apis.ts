@@ -143,7 +143,24 @@ export namespace Apis {
     })
   }
 
-  export const MAX_ERROR_SENDING_CAPTION = 5
+  export type SendCaptionErrorResponse = {
+    error_type: string,
+    response: string,
+    error_code: string,
+    error_message: string,
+    http_code: string
+  }
+
+  export const isSendCaptionErrorResponse = (json: unknown): json is SendCaptionErrorResponse => {
+    const r = json as SendCaptionErrorResponse
+    return (
+      typeof r?.error_type === 'string'
+      && typeof r?.response === 'string'
+      && typeof r?.error_code === 'string'
+      && typeof r?.error_message === 'string'
+      && typeof r?.http_code === 'string'
+    )
+  }
 
   // ========== ========== Heartbeat (for keeping server session) ========== ==========
 

@@ -496,13 +496,21 @@ class App {
         const f = async (msg:string) => {
           const response = await Apis.sendCaption({message: msg})
           if (response.ok == true) {
-            TmpConfig.resetCaptionErrorCount();
           } else {
-            Log.w('Error', `Error in sending caption. status:${response.status}/${response.statusText}`)
-            if (TmpConfig.incrementCaptionErrorCount() >= Apis.MAX_ERROR_SENDING_CAPTION) {
-              this.sendChatSystemMessage(ChatSystemType.WARNING, T.t("Failed sending captions.", "Chat"))
-              TmpConfig.resetCaptionErrorCount();
+            const json = await response.json()
+            let msg = ''
+            if (Apis.isSendCaptionErrorResponse(json)) {
+              const eType = json.error_type.toLowerCase()
+              if (eType === 'get' || eType === 'set') {
+                msg = ` @${json.error_type} ${json.error_code}:${json.error_message}`
+              } else if (eType === 'server') {
+                msg = ` @${json.error_type} Response:${json.http_code}`
+              } else {
+                msg = ` @${json.error_type}`
+              }
             }
+            Log.w('Error', `Error in sending caption. status:${response.status}/${response.statusText} msg:${msg}`)
+            this.sendChatSystemMessage(ChatSystemType.WARNING, T.t("Failed sending captions.", "Chat") + msg)
           }
         }
         f(text)

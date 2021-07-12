@@ -128,18 +128,6 @@ class TmpConfig {
     return this.isZoomUrl(url)
   }
 
-  private static captionErrorCount:number = 0
-  static getCaptionErrorCount(): number {
-    return this.captionErrorCount
-  }
-  static incrementCaptionErrorCount(): number {
-    this.captionErrorCount++
-    return this.captionErrorCount
-  }
-  static resetCaptionErrorCount() {
-    this.captionErrorCount = 0
-  }
-
 } // end of TmpConfig
 
 export default TmpConfig
