@@ -74,6 +74,9 @@ export class DialogConfig {
 
     if (TmpConfig.useServer()) {
       UtilDom.displayOn(this.zoomConfig)
+      if (this.zoomApiKey.value.length > 0) {
+        this.zoomApiKey.focus() // avoid strange display for very long text
+      }
     } else {
       UtilDom.displayOff(this.zoomConfig)
     }
