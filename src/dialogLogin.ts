@@ -103,10 +103,12 @@ class DialogLogin {
 
   setRoom(room:string) {
     this.roomInput.value = room
+    this.updateState()
   }
 
   setName(name:string) {
     this.nameInput.value = name
+    this.updateState()
   }
 
   showDialogWithMessage(message:string, canGetMain:boolean=false, canGetChat:boolean=false) {
@@ -160,46 +162,55 @@ class DialogLogin {
   showRoom() {
     this.roomInput.required = true
     UtilDom.displayOn(this.roomRow, "table-row")
+    this.updateState()
   }
 
   fixRoleAsViewer() {
     this.viewerRadio.checked = true
     UtilDom.displayOff(this.subtitlerChoice)
+    this.updateState()
   }
 
   fixRoleAsSubtitler() {
     this.subtitlerRadio.checked = true
     UtilDom.displayOff(this.viewerChoice)
+    this.updateState()
   }
 
   clearRole() {
     UtilDom.displayOn(this.viewerChoice, "inline-block")
     UtilDom.displayOn(this.subtitlerChoice, "inline-block")
+    this.updateState()
   }
 
   hideRoom() {
     this.roomInput.required = false
     UtilDom.displayOff(this.roomRow)
+    this.updateState()
   }
 
   showName() {
     this.nameInput.required = true
     UtilDom.displayOn(this.nameRow, "table-row")
+    this.updateState()
   }
 
   hideName() {
     this.nameInput.required = false
     UtilDom.displayOff(this.nameRow)
+    this.updateState()
   }
 
   showPass() {
     this.passInput.required = true
     UtilDom.displayOn(this.passRow, "table-row")
+    this.updateState()
   }
 
   hidePass() {
     this.passInput.required = false
     UtilDom.displayOff(this.passRow)
+    this.updateState()
   }
 
   private showMessage(message:string) {
