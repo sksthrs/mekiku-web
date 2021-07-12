@@ -76,6 +76,8 @@ export class PaneChat implements Pane {
     } else if (messageType === ChatSystemType.PRECAUTION) {
       message = this.makeTimerPrecautionMessage()
       if (AppConfig.data.chat_useSound) { this.audioPrecaution.play() }
+    } else if (messageType === ChatSystemType.WARNING) {
+      message = messageArg
     } else {
       return // ignore illegal type
     }
