@@ -849,7 +849,6 @@ class App {
   }
 
   private onReceived(data:Content) {
-    Log.w("Error",`onReceived data=${JSON.stringify(data)}`)
     const member = MemberInfoClass.fromContent(data)
     if (ContentType.LOGIN in data) {
       this.comm.send_room(ContentUtil.makeResponseData())
