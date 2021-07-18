@@ -164,6 +164,35 @@ class App {
     const d = this.comm.send_room(dRaw)
     const dR = ContentClass.fromSendData(this.id, d)
     this.paneMain.addNewItem(dR)
+    
+    if (TmpConfig.isZoomAvailable() !== true) { return }
+
+    this.sendCaption(text).then(() => {}) // no catch (caught in sendCaption)
+  }
+
+  private async sendCaption(text:string) {
+    try {
+      const response = await Apis.sendCaption({message: text})
+      if (response.ok == true) {
+      } else {
+        const json = await response.json()
+        let msg = ''
+        if (Apis.isSendCaptionErrorResponse(json)) {
+          const eType = json.error_type.toLowerCase()
+          if (eType === 'get' || eType === 'set') {
+            msg = ` @${json.error_type} ${json.error_code}:${json.error_message}`
+          } else if (eType === 'server') {
+            msg = ` @${json.error_type} Response:${json.http_code}`
+          } else {
+            msg = ` @${json.error_type}`
+          }
+        }
+        Log.w('Error', `Error in sending caption. status:${response.status}/${response.statusText} msg:${msg}`)
+        this.sendChatSystemMessage(ChatSystemType.WARNING, T.t("Failed sending captions.", "Chat") + msg)
+      }
+    } catch(err) {
+      Log.w('Error', `Error in sending caption. Message:${err}`)
+    }
   }
 
   private sendGross(lines:string[]) {
@@ -378,9 +407,13 @@ class App {
       this.comm.leaveRoom()
       if (TmpConfig.getAuthType() === 'server') {
         const f = async () => {
-          const response = await Apis.logoutRoom()
-          if (response.ok !== true) {
-            Log.w('Error', `Logout POST failed : ${response.status}:${response.statusText}`)
+          try {
+            const response = await Apis.logoutRoom()
+            if (response.ok !== true) {
+              Log.w('Error', `Logout POST failed : ${response.status}:${response.statusText}`)
+            }
+          } catch(err) {
+            Log.w('Error', `Error in logout post. Message:${err}`)
           }
         }
         f()
@@ -492,29 +525,6 @@ class App {
     })
     this.paneInput.setDoOnEnter((text) => {
       this.sendMain(text)
-      if (TmpConfig.isZoomAvailable()) {
-        const f = async (msg:string) => {
-          const response = await Apis.sendCaption({message: msg})
-          if (response.ok == true) {
-          } else {
-            const json = await response.json()
-            let msg = ''
-            if (Apis.isSendCaptionErrorResponse(json)) {
-              const eType = json.error_type.toLowerCase()
-              if (eType === 'get' || eType === 'set') {
-                msg = ` @${json.error_type} ${json.error_code}:${json.error_message}`
-              } else if (eType === 'server') {
-                msg = ` @${json.error_type} Response:${json.http_code}`
-              } else {
-                msg = ` @${json.error_type}`
-              }
-            }
-            Log.w('Error', `Error in sending caption. status:${response.status}/${response.statusText} msg:${msg}`)
-            this.sendChatSystemMessage(ChatSystemType.WARNING, T.t("Failed sending captions.", "Chat") + msg)
-          }
-        }
-        f(text)
-      }
     })
     this.paneInput.setDoOnUndo(() => {
       const undoed = this.paneMain.undoLastItem()
@@ -606,6 +616,10 @@ class App {
   private sendHeartBeat() {
     if (this.comm.isInRoom() === true && TmpConfig.getUserType() === 'wi') {
       Apis.sendHeartBeat({message:TmpConfig.getName()}) // sending name for now
+      .then(() => {})
+      .catch(err => {
+        Log.w('Error', `Error in sending heartbeat. Message:${err}`)
+      })
     }
   }
 
@@ -658,13 +672,17 @@ class App {
         }
         case "zoom": {
           const f = async () => {
-            const response = await Apis.updateZoom({
-              key: TmpConfig.getZoomUrl()
-            })
-            if (response.ok === true) {
-              this.comm.queue_room(ContentUtil.makeZoomData(TmpConfig.getZoomUrl()))
-            } else {
-              Log.w('Error', `Error in updating zoom api key. status:${response.status}/${response.statusText}`)
+            try {
+              const response = await Apis.updateZoom({
+                key: TmpConfig.getZoomUrl()
+              })
+              if (response.ok === true) {
+                this.comm.queue_room(ContentUtil.makeZoomData(TmpConfig.getZoomUrl()))
+              } else {
+                Log.w('Error', `Error in updating zoom api key. status:${response.status}/${response.statusText}`)
+              }
+            } catch(err) {
+              Log.w('Error', `Error in updating zoom api key. Message:${err}`)
             }
           }
           f()
