@@ -347,10 +347,8 @@ class App {
   // ==================== Events ====================
 
   private setConfigDialogEvents() {
-    this.configFileController.onLoad = ev => {
-      if (ev.target?.result == null) return
+    this.configFileController.onLoad = (ev,file,text) => {
       Log.w('Info','Config opened.')
-      const text = ev.target.result as string // this must be string
       AppConfig.trySetJSON(text)
       this.reflectNewConfig()
       this.dialogConfig.configToDialog() // apply new config into config dialog
