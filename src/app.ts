@@ -720,6 +720,7 @@ class App {
 
   private updateAllConfig() {
     this.updateConfig()
+    this.setSplits()
     this.paneMain.updateConfig();
     this.paneInput.updateConfig();
     this.paneChat.updateConfig();
@@ -736,6 +737,8 @@ class App {
   }
 
   private setSplits() {
+    if (TmpConfig.getMemberType() !== 'wi') return
+
     const gutterWidth = 6
     if (this.splitContainer == null) {
       this.splitContainer = Split(['#pane1','#pane2','#pane3'],{
