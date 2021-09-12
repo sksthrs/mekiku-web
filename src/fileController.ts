@@ -48,6 +48,7 @@ class FileController {
     if (filetype != null) {
       this.opener.accept = filetype
     }
+    this.opener.value = ''
     this.opener.click()
   }
 }
