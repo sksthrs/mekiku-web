@@ -24,7 +24,13 @@ const renderer = (env,argv) => ({
       ],
     }]
   },
+  devServer: {
+    host: '0.0.0.0',
+    port: 8888,
+    static: {
+      directory: path.resolve(__dirname, 'dist'),
+    }
+  }
 });
 
 module.exports = renderer
-
