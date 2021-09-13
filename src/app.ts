@@ -303,10 +303,10 @@ class App {
     if (json.subtitler_url_key != null && json.subtitler_url_key !== '') {
       const queries = Util.queryString2kvArray(UtilDom.getQuery())
       if (queries.some(q => q.key ===  json.subtitler_url_key)) {
-        TmpConfig.setUserType('wi')
+        TmpConfig.setUserType(MemberType.WEB_SUBTITLER)
         this.dialogLogin.fixRoleAsSubtitler()
       } else {
-        TmpConfig.setUserType('wv')
+        TmpConfig.setUserType(MemberType.WEB_VIEWER)
         this.dialogLogin.fixRoleAsViewer()
       }
     }
@@ -331,10 +331,10 @@ class App {
     }
 
     switch (TmpConfig.getUserType()) {
-      case 'wi':
+      case MemberType.WEB_SUBTITLER:
         showhide(Apis.SHOW, json.ip)
         break
-      case 'wv':
+      case MemberType.WEB_VIEWER:
         showhide(json.vn, json.vp)
         break
       default:
@@ -612,7 +612,7 @@ class App {
   }
 
   private sendHeartBeat() {
-    if (this.comm.isInRoom() === true && TmpConfig.getUserType() === 'wi') {
+    if (this.comm.isInRoom() === true && TmpConfig.getUserType() === MemberType.WEB_SUBTITLER) {
       Apis.sendHeartBeat({message:TmpConfig.getName()}) // sending name for now
       .then(() => {})
       .catch(err => {
@@ -737,7 +737,7 @@ class App {
   }
 
   private setSplits() {
-    if (TmpConfig.getMemberType() !== 'wi') return
+    if (TmpConfig.getMemberType() !== MemberType.WEB_SUBTITLER) return
 
     const gutterWidth = 6
     if (this.splitContainer == null) {

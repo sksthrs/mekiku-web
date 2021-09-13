@@ -1,6 +1,7 @@
 import { UtilDom } from "./utilDom"
 import Log from "./log"
 import LoginInfo from "./loginInfo"
+import { MemberType } from "./content"
 
 class DialogLogin {
   private dialogLogin = document.getElementById('login') as HTMLDivElement
@@ -45,7 +46,7 @@ class DialogLogin {
     this.buttonLogin.addEventListener('click', (ev) => {
       const info = new LoginInfo()
       info.room = this.roomInput.value
-      info.memberType = (this.subtitlerRadio.checked) ? 'wi' : 'wv'
+      info.memberType = (this.subtitlerRadio.checked) ? MemberType.WEB_SUBTITLER : MemberType.WEB_VIEWER
       info.name = this.nameInput.value
       info.pass = this.passInput.value
       this.hideDialog()
