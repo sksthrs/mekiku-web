@@ -3,10 +3,12 @@ import { AppConfig } from "./appConfig";
 import { UtilDom } from "./utilDom";
 import { Tuple2, Util } from "./util";
 import Log from "./log";
+import TmpConfig from "./TmpConfig";
 
 export class DialogConfigViewer {
   private readonly container = document.getElementById('config-view-container') as HTMLDivElement
   private readonly pane = document.getElementById("config-view") as HTMLDivElement;
+  private readonly checkButtonsHidden = document.getElementById('config-general-v-hide-buttons') as HTMLInputElement
   private readonly inputFontSize = document.getElementById('config_main_v_font_size') as HTMLInputElement
   private readonly buttonFontSmaller = document.getElementById('config-view-font-size-down') as HTMLButtonElement
   private readonly buttonFontLarger = document.getElementById('config-view-font-size-up') as HTMLButtonElement
@@ -131,6 +133,8 @@ export class DialogConfigViewer {
       }
     }
     this.selectLocale.selectedIndex = localeIx;
+
+    this.checkButtonsHidden.checked = TmpConfig.getIfHideViewerButtons()
   }
 
   dialogToConfig() {
@@ -194,6 +198,11 @@ export class DialogConfigViewer {
     const selectedLocale = this.locales[this.selectLocale.selectedIndex].v1;
     if (selectedLocale !== current) {
       AppConfig.data.setLocale(selectedLocale);
+      this.paneNames.push("misc")
+    }
+
+    if (this.checkButtonsHidden.checked !== TmpConfig.getIfHideViewerButtons()) {
+      TmpConfig.setIfHideViewerButtons(this.checkButtonsHidden.checked)
       this.paneNames.push("misc")
     }
   }

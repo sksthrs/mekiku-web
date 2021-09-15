@@ -128,6 +128,15 @@ class TmpConfig {
     return this.isZoomUrl(url)
   }
 
+  // Hide/Show buttons(controls) on top-right of viewer screen
+  private static ifHideViewerButtons:boolean = false;
+  static getIfHideViewerButtons(): boolean {
+    return this.ifHideViewerButtons
+  }
+  static setIfHideViewerButtons(hidden:boolean) {
+    this.ifHideViewerButtons = hidden
+  }
+
 } // end of TmpConfig
 
 export default TmpConfig

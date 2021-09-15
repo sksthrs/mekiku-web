@@ -297,6 +297,8 @@ export class T {
         "Bold" : "太字",
         "Background Color" : "背景色",
         "Show" : "表示する",
+        "Hide Top-Right Buttons" : "右上のボタンを隠す",
+        "To show again, click caption area" : "再表示するには、字幕部分をクリックします",
       },
       "Config|Misc" : {
         "General" : "全体的な設定",

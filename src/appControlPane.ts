@@ -35,6 +35,14 @@ class AppControlPane {
   hideShortState() {
     UtilDom.displayOff(this.shortState)
   }
+
+  showAppControl() {
+    UtilDom.displayOn(this.control)
+  }
+
+  hideAppControl() {
+    UtilDom.displayOff(this.control)
+  }
 }
 
 export default AppControlPane

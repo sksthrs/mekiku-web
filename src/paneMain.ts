@@ -28,6 +28,11 @@ export class PaneMain implements Pane {
 
   private isViewerMode: boolean = false
 
+  private onMainClicked: (ev:MouseEvent) => void = (e) => {}
+  public setOnClick(callback:(ev:MouseEvent) => void) {
+    this.onMainClicked = (ev) => callback(ev)
+  }
+
   constructor() {
     const arg = {
       pane: this.pane,
@@ -44,6 +49,9 @@ export class PaneMain implements Pane {
         this.stopScrollAndJumpToLatest();
       }
     });
+    this.pane.addEventListener('click', (ev) => {
+      this.onMainClicked(ev)
+    })
 
     // exec finally in constructor. (in configToScreen, scroll.lineHeightPx is set.)
     this.configToScreen();

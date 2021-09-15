@@ -129,6 +129,7 @@ class App {
     })
 
     this.paneMain = new PaneMain()
+    this.setMainEvents()
 
     this.paneFkey = new PaneFkey()
     this.paneInput = new PaneInput()
@@ -514,6 +515,15 @@ class App {
     }
   }
 
+  private setMainEvents() {
+    this.paneMain.setOnClick((ev) => {
+      if (ev.button === 0 && TmpConfig.getMemberType() == MemberType.WEB_VIEWER) {
+        TmpConfig.setIfHideViewerButtons(false)
+        this.updateAppControlShow();
+      }
+    })
+  }
+
   private setInputEvents() {
     this.paneInput.setGetFkey((ix) => {
       return this.paneFkey.getFKey(ix)
@@ -734,6 +744,17 @@ class App {
     const locale = AppConfig.data.getLocale()
     T.setLocale(locale)
     this.localizeAll()
+    this.updateAppControlShow();
+  }
+
+  private updateAppControlShow() {
+    if (TmpConfig.getMemberType() === MemberType.WEB_VIEWER) {
+      if (TmpConfig.getIfHideViewerButtons()) {
+        this.appControl.hideAppControl()
+      } else {
+        this.appControl.showAppControl()
+      }
+    }
   }
 
   private setSplits() {

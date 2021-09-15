@@ -161,6 +161,20 @@ tr.single_column {
 	background-color: #CFC;
 }
 
+.checkbox_toggle {
+  display: none;
+}
+
+.checkbox_toggle+label {
+	font-weight: normal;
+	background-color: #DDD;
+}
+
+.checkbox_toggle:checked+label {
+	font-weight: bold;
+	background-color: #CFC;
+}
+
 /* ==================== App-specific Elements ==================== */
 
 #shutter {

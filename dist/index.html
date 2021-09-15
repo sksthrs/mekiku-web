@@ -165,7 +165,7 @@
   <div id="login" class="dialog open"><div class="dialog_content big_font">
     <div id="app-title" class="title">
       <span id="login-title" class="l10n" data-context="General">mekiku-web</span>
-      <span id="app-version">1.1.2</span>
+      <span id="app-version">1.1.3</span>
     </div>
     <table id="loginTable"><tbody>
       <tr id="loginTable_styleRow" class="single_column">
@@ -561,6 +561,18 @@
       <div class="config-singleline">
         <span id="config-view-main-backcolor-text" class="config-key l10n" data-context="Config|General">Background Color</span>
         <input id="config_main_v_backColor" type="color">
+      </div>
+      <div class="config-singleline">
+        <span id="config-view-main-scroll-msec-text" class="config-key l10n" data-context="Config|Main">Scroll interval per line</span>
+        <input id="config_main_v_scrollMsec" class="w5" type="number" min="50" max="2000" step="50" required step="50">
+        <span id="config-view-main-scroll-msec-unit" class="l10n" data-context="Config|Main">msec</span>
+      </div>
+      <div class="config-singleline">
+        <input id="config-general-v-hide-buttons" type="checkbox" class="checkbox_toggle">
+        <label for="config-general-v-hide-buttons" class="label_toggle">
+          <span id="config-view-general-hide-buttons-text" class="l10n" data-context="Config|General">Hide Top-Right Buttons</span>
+        </label>
+        <br><span id="config-view-general-hide-buttons-complement" class="l10n" data-context="Config|General">To show again, click caption area</span>
       </div>
       <div class="config-singleline">
         <span id="config-view-select-locale-text" class="config-key l10n" data-context="Config|Misc">Menu</span>
